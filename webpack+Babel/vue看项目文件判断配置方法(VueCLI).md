@@ -48,7 +48,9 @@ vue -V
 
 （测试自己的本地版本：2.9.6）
 
-#### 安装  脚手架 Vue
+
+
+#### 不同脚手架版本下的命令和文件结构对比
 
 ### vue CLI2 
 
@@ -77,7 +79,7 @@ vue -V
 ...
 ```
 
-## 1.2 环境配置的区别
+## 1.2 不同环境配置下的注意事项
 
 ### vue CLI2 
 
@@ -129,11 +131,68 @@ vue.config.js文件 +
 
 [参考文章](https://blog.csdn.net/baidu_30891377/article/details/106668574)
 
+## 3.安装卸载和查看历史版本vue-cli
+
+```
+1.安装node.js（官网选择稳定版本或者推荐版本下载进行安装，傻瓜式安装即可，可以更改安装路径）
+2.安装Vue-cli
+（1）可能npm没有配置国内镜像,国外的仓库总是不容易拉取的，所以先换一下国内的镜像。
+
+命令行输入"npm -g cnpm --registy=https://registry.npm.taobao.org"回车使用淘宝镜像
+
+（2）然后进行Vue脚手架安装：
+全局安装：命令行输入npm install vue-cli -g
+指定版本的安装：命令行输入"npm install -g vue-cli@2.8.2"回车安装
+npm安装指定版本的package，只需要在命令行之后加上 @版本号即可。
+
+安装vue-cli 2.x指定版本
+npm install -g vue-cli@2.x.x
+//注意此处只有一个@
+
+查看vue-cli3.x及以上可以安装的版本
+npm view @vue/cli versions --json
+安装：
+例如 3.11.0版本
+npm install -g @vue/cli@3.11.0
+
+查看vue-cli2.x及以下可以安装的版本
+npm view vue-cli versions --json
+
+3.安装webpack
+在 webpack3 中，webpack与webpack-cli是绑定的。也就是你使用"npm i webpack -g"安装了webpack以后，webpack-cli是默认就安装上了。但是到了webpack4，这2个东西已经被分解成了2个完全独立的包，所以，你还需要独立安装webpack-cli。
+
+命令行输入 npm install webspack -g安装webpack。
+命令行输入 npm i webpack-cli -g 安装webpack-cli。
+输入webpack -v，查看安装成功。
+```
 
 
 
+————————————————
+原文链接：https://blog.csdn.net/qq_43780814/article/details/112935636
 
 
 
+## 4 升级VueGLi 可能碰到的问题
+
+```
+
+Vue packages version mismatch:
+
+- vue@3.2.45 (C:\Users\15612\AppData\Roaming\npm\node_modules\vue\index.js)
+- vue-template-compiler@2.7.14 (C:\Users\15612\AppData\Roaming\npm\node_modules\@vue\cli\node_modules\vue-template-compiler\package.json)
+
+This may cause things to work incorrectly. Make sure to use the same version for both.
+If you are using vue-loader@>=10.0, simply update vue-template-compiler.
+If you are using vue-loader@<10.0 or vueify, re-installing vue-loader/vueify should bump vue-template-compiler to the latest.
+```
+
+提示： vue@3.2.45   vue-template-compiler@2.7.14 两个版本不对应。
+
+npm i vue-template-compiler@3.2.45 --save
+
+npm update vue-template-compiler
 
 
+
+vueGLI版本和本地的vue模板版本不一致。需要匹配才可以。
