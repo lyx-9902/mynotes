@@ -12,15 +12,8 @@ HBuilderX 打包 app有两种方式：
 
 区别：
 
-```
-http://59.202.48.204:13380/websocket/123
-```
 
 
 
 
 
-this.parms.checkType = e.checkType;
-			this.parms.buildingType = e.buildingType;
-
-this.myParms = e;

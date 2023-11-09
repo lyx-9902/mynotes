@@ -2,7 +2,15 @@ react笔记
 
 ## 注意点：
 
-*  class是一个关键字， 类。 所以react 写class, 用classname   ，会自动编译替换class
+class是一个关键字， 类。 所以react 写class, 用classname   ，会自动编译替换class
+
+点击方法：
+
+```
+ <button onClick = {this.sendData}>给父元素传值</button>
+```
+
+
 
 ### 常用的插件： 
 
@@ -464,6 +472,8 @@ ReactDOM.render(
 
 #### 3. 混搭
 
+ {<button>插值中放入标签，三元判断等</button>}
+
 ````javascript
 
 var element4 = '我是混搭';
@@ -613,7 +623,7 @@ ReactDOM.render(
 
 ````
 
-另一种传值形式，也是编程式
+另一种传值形式，也是编程式 （组件传值）
 
 ````javascript
 function Childdom(props){
@@ -667,13 +677,15 @@ ReactDOM.render(
 
 ### 组件 
 
+类组件传参-见序号8
+
 ````javascript
 
   class Ant extends React.Component {
     constructor(props) {
       super(props)
     this.state = {}
-}
+    }
   
     render() {
 
@@ -817,7 +829,7 @@ ReactDOM.render(
 
 
 
-## 8 传值
+## 8 传值（类组件传参）
 
 ### 8.1 自己的标签 ——> 传向自己的组件
 
@@ -949,12 +961,13 @@ render() {
 ````javascript
 
 class Clock extends React.Component {
+    平级1
   constructor(props) {
     super(props)
-  this.state = {
+      this.state = {
     time: new Date().toLocaleTimeString()
     }}
-
+  平级2
   render() {
     return ( 
       <div >
@@ -962,6 +975,7 @@ class Clock extends React.Component {
       </div>
     )
   }
+    平级3
    componentDidMount(){   componentDidMount是声明周期函数，加载完页面开始执行。
     setInterval(() => {
       
@@ -1199,7 +1213,7 @@ class Children extends React.Component {
   );
 
 简写形式： 既然children标签传入， children的props中就会挂载。那么就可以这样写：
- <button onClick = {()=> {this.props.setChildDate('我是世界调用props')}}>给父元素传值</button> ，这样也是可以调用的。   匿名的箭头函数，this.不变。
+ <button onClick = {()=> {this.props.setChildDate('我是子组件调用props')}}>给父元素传值</button> ，这样也是可以调用的。   匿名的箭头函数，this.不变。
 
 ````
 
@@ -1232,7 +1246,7 @@ class Clock extends React.Component {
   render() {
     return ( 
       <div >
-   <div onClick = { this.parentEvent } data-id = 'lyx'>
+   <div onClick = { this.parentEvent } data-index = 'lyx'>
      查看事件对象e
    </div>
       </div>
@@ -1972,8 +1986,6 @@ class Clock extends React.Component {
 
 ````
 
-![1595060824412](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595060824412.png)
-
 ### 引入echar map地图
 
 ```
@@ -2259,7 +2271,7 @@ import 'echarts/map/js/china';
 
 ## 16 表单和图表 seach案例
 
-![1595136322702](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595136322702.png)
+
 
 涉及点： 父子传值， 常规dom渲染理解为jsx对象，map循环，
 
@@ -2479,7 +2491,7 @@ let url = 'https://voice.baidu.com/newpneumonia/get?target=trend&isCaseIn=0&stag
 打开页面，可以看到数据
 ````
 
-![1595143768010](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595143768010.png)
+
 
 
 
@@ -2517,7 +2529,7 @@ let url = 'https://voice.baidu.com/newpneumonia/get?target=trend&isCaseIn=0&stag
 			          }
 ```
 
-![1595145584944](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595145584944.png)
+
 
 
 
@@ -2540,7 +2552,7 @@ async	 componentWillMount(){
 
 ````
 
-![1595225285993](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595225285993.png)
+
 
 
 
@@ -2803,8 +2815,6 @@ link  相当于a标签跳转
 
 #### 基本的路由模式 code
 
-![1595229808242](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595229808242.png)
-
 ### 1. 常规的路由link跳转 和传值
 
 APP.js  组件页面 挂载到index.js 主页面中
@@ -2904,12 +2914,6 @@ export default App;
 http://localhost:3000/?sername=admin#abc
 ````
 
-![1595235625648](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595235625648.png)
-
-
-
-
-
 ###  2 path 传值
 
 通过路由标签，link传值， route ： 键值， 组件中props对象中可以看到params下的值。
@@ -2932,7 +2936,7 @@ http://localhost:3000/me/12345
 
 
 
-![1595237448759](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595237448759.png)
+
 
 ### 3.  Link 的 replace 路由切换跳转
 
@@ -3275,9 +3279,6 @@ import React from 'react';
 
 // 引入仓库和 解构创建仓库的方法
 import Redux , {creatStore, createStore}  from 'redux' 
-
-
-
 
 // 2. 创建函数  通过动作 用于创建新的state   参数：传入需要修改的数据 和方法 (形参)
 const reducer = function(state = { num: 0 }, action ){
@@ -3673,322 +3674,3 @@ const App = connect(
 
 
 ````
-
-
-
-## Ant  ui框架
-
-说明：Ant Design 是一个 ui框架，和 bootstrap 一样是ui框架。里面的组件很完善，开发中后台系统非常方便。分别基于react、vue、angular框架，各自开发了一套 Ant Design 的UI框架。（这里主要讲react框架的 Ant Design）
-
-   系列          框架          系列官方命名
-
-Ant:   |——  react        Ant Design    (n. (design) 设计；图案)
-
-​          |——  vue          Ant Design Vue
-
-​          |—— angular    ng-zorro
-
-
-
-​          |——     移动端     Ant Design Mobile    一个基于 Preact / React / React Native 的 UI 组件库
-
-1.  Ant Design 是蚂蚁金服开发和正在使用的一套企业级的前端设计语言和基于 [React](http://www.oschina.net/p/facebook-react) 的前端框架实现。最早是在2015年发布的。
-
-2.  对react 评价： React 本身的 API 并不多，是一个较为简单的框架。但是，要用好它，必须使用其他的配套工具，所以人们常说学习 React 并不是学习一个框架，而是学习一整套 React 技术栈。
-
-
-
-扩展新闻：
-
-1. React.js   是Facebook 开发所有。自2016 爆发React专利事件
-
-     2. Twitter公司开源的Bootstrap
-        3.  Ant 目前还没有官方的  针对 vue移动端  版本 ui
-
-
-
-注意： Ant 有针对react  vue  移动端，pc端 ，注意区分
-
-### 按钮 案例演示
-
-   **antd官网**    https://ant.design/docs/react/introduce-cn
-
-#### 1. npm 下载
-
-```javascript
-npm install antd --save    /   yarn add antd     /  cnpm install antd --save
-```
-
-#### 2  在react项目的css文件中引入Antd的css
-
-```javascript
-@import '~antd/dist/antd.css';    //引入index.css
-注意： index.js 中也要有引入   
-import './index.css';
-```
-
-3)、 案例： 如何使用一个Button:
-
-
-
-#### a在对应的组件中引入Antd
-
-```javascript
-import { Button } from 'antd';
-```
-
-#### 在html本分写
-
-```javascript
-<Button type="primary">Primary</Button>
-  
-```
-
-#### 查看页面，已经显示了.
-
-````javascript
-import React from 'react';
-import {Card,Button} from 'antd'
-
-
-const App  = function(){
-
-  function eventclick(e){
-console.log(e);
-  }
-return(
-
-        <div className="App">
-        <div>
-          <button>我是原生</button>
-          <Card title="普通的按钮">
-            <Button> 无样式按钮 </Button>
-            <Button type="primary" onClick = { eventclick}> 普通按钮 </Button>
-            <Button type="dashed"> 虚线按钮 </Button>
-            <Button type="danger"> 危险按钮 </Button>
-            <Button disabled> 被禁用的按钮 </Button>
-          </Card>
-        </div>
-      </div>
-      )
-
-}
-
-
-
-
-export default App;
-
-````
-
-**eact中使用Antd高级配置，按需引入css样式**
-现在组件已经成功运行起来了，但是在实际开发过程中还有很多问题，例如上面例子实际上加载了全部的antd组件的样式（对前端性能是个隐患）。
-
-## 优化方案：按需加载
-
-
-
-#### 1. 安装antd
-
-```javascript
-npm install antd --save
-```
-
-#### 2. 安装（react-app-rewired
-
-（react-app-rewired）一个对 create-react-app 进行自定义配置的社区解决方案
-
-```javascript
-yarn add react-app-rewired    /  cnpm install  react-app-rewired --save
-```
-
-#### 3. 修改package.jsonz中react-scripts 需改为react-app-rewired
-
-```javascript
-"scripts": {
-  		"start": "react-app-rewired start",
-  		"build": "react-app-rewired build",
-  		"test": "react-app-rewired test --env=jsdom",
-  		"eject": "react-app-rewired eject"
- }
-
-```
-
-4. 在项目根目录创建一个 config-overrides.js 配置文件
-
-```javascript
-const { injectBabelPlugin } = require('react-app-rewired');
-
-module.exports = function override(config, env) {
-  	 config = injectBabelPlugin(
-    		   ['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
-       	   config,
- 	  );
-  	 return config;
- };
-
-```
-
-
-
-5. 安装babel-plugin-import babel-plugin-import是一个用于按需加载组件代码和样式的 babel 插件
-
-```javascript
-yarn add babel-plugin-import   /  cnpm install babel-plugin-import --save
-
-```
-
-6. 然后移除前面在 src/App.css 里全量添加的
-
-```javascript
-@import '~antd/dist/antd.css'; 
-
-```
-
-7. 直接引入组件使用就会有对应的css：
-
-```javascript
-import { Button } from 'antd';
-
-<Button type="primary">Primary</Button>
-
-```
-
-
-
-### 遇到问题： 
-
-第四步： injectBabelPlugin 显示 官方已弃用.
-
-
-
-https://blog.csdn.net/zoepriselife316/article/details/89711062
-
-处理：
-
-所以现在你可以开始下载这个包还有less,less-loader了
-npm 方法：
-
-````javacript
-npm install customize-cra --save-dev
-npm i less
-npm i -D less-loader
-
-````
-
-下载完，修改下
-config-overrides.js
-
-````javascript
-const {
-    override,
-    fixBabelImports,
-    // addLessLoader,
-} = require("customize-cra");
-
-
-module.exports = override(
-    fixBabelImports("import", {
-        libraryName: "antd", libraryDirectory: "es", style: 'css' // change importing css to less
-    }),
-    // addLessLoader({
-    //   javascriptEnabled: true,
-    //   modifyVars: { "@primary-color": "#1DA57A" }
-    // })
-
-);
-
-````
-
-然后就可以重新
-
-````javascript
-npm run start
-````
-
-
-
-接下来 测试 打包是否真的变小了
-
-![1595326622189](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595326622189.png)
-
-![1595326642290](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\1595326642290.png)
-
-ok 引入只 使用了按钮 ，  确实小了
-
-
-
-## react中使用jquery 语法
-
-
-
-```javascript npm install jquery
- npm install jquery
-```
-
-
-
-引入
-
-import $ from  'jquery'
-
-````javascript
-import React from 'react';
-import './css/App.css'
-import { Button } from 'antd';
-import $ from  'jquery'
-
-let slider_img =[
-  'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg'
-,"https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/B18FCBB3-67FD-48CC-B4F3-457BA145F17A.jpeg"
-]
-
-
-class App extends React.Component{
-
-  constructor(props) {
-    super(props)
-      this.state = {
-      }
-  }
-
-  componentWillMount(){
-    console.log(' CompontWillMount： 组件将要渲染')
-   
-  }
-
-componentDidMount(){
-  window.addEventListener('resize', this.handleResize.bind(this)) 
-}
-
-componentWillUnmount() {  // 防止 this混乱   去掉this
-  window.removeEventListener('resize', this.handleResize.bind(this))
-}
-
-        handleResize(e){
-          $('.App-slideshow').css({
-            // marginLeft: document.body.clientWidth*0.3+"px"
-          })
-
-         console.log($('.App-slideshow'));
-        console.log( document.body.offsetWidth );
-        console.log(  document.body.clientWidth);
-        }
-
-  render(){
-  return (
-      <header className="App-slideshow">
-          <div className = "slideshow_item">
-               <img src= {slider_img[0] } alt="this is img" />
-          </div>
-      </header>
- 
-  );
-
-}
-}
-
-export default App;
-
-````
-
