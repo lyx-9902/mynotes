@@ -1782,3 +1782,28 @@ interface Alarm {
 链接：https://www.jianshu.com/p/ced644f45764
 来源：简书
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+
+
+
+
+2023.11.22
+
+疑问点：
+
+```
+// es6中的剩余运算符
+function sum(...result:number[]):number{
+
+ var t = 0;
+ for(var i =0; i<result.length; i++){
+
+     t+= result[i] 
+ }
+ return t;
+}
+alert(sum(1,2))
+```
+
+
+
