@@ -210,7 +210,7 @@ Ul插件提供了与地图控件和其他用户可以触摸或交互的东西相
 
 应用与 angular结合的框架     **angular-mapboxgl-directive**
 
-应用与 vue结合的框架
+应用与 vue结合的框架 
 
 [VueMapbox](https://soal.github.io/vue-mapbox/)
 
