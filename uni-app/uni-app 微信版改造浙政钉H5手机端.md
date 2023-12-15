@@ -37,8 +37,9 @@
 
  vue可以npm安装  
 
+main.js文件配置
+
 ```
-main.js
 
 import VConsole from 'vconsole';
  new VConsole();
@@ -58,6 +59,14 @@ console.log(dd)// 项目中可以直接使用dd.xx方法；
 [其他浙政钉配置参考](https://blog.csdn.net/weixin_48693596/article/details/117924655?spm=1001.2101.3001.6650.17&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-17-117924655-blog-120341532.235%5Ev38%5Epc_relevant_sort_base2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-17-117924655-blog-120341532.235%5Ev38%5Epc_relevant_sort_base2&utm_relevant_index=18)
 
 
+
+参考链接
+
+[使用 uni-app 打包 H5](https://blog.csdn.net/weixin_50339217/article/details/125260027?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1-125260027-blog-133807399.235^v39^pc_relevant_anti_vip_base&spm=1001.2101.3001.4242.2&utm_relevant_index=4)
+
+
+
+[uniApp 打包H5工程 超详细（打包-实现跨域-nignx配置）](https://blog.csdn.net/qq_20236937/article/details/124258970?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-124258970-blog-133807399.235^v39^pc_relevant_anti_vip_base&spm=1001.2101.3001.4242.1&utm_relevant_index=3)
 
 
 

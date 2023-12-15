@@ -114,6 +114,12 @@ export default App;
 
 
 
+拓展：
+
+```
+ <Icon type="home" />    这种用法是 3.x版本写法
+```
+
 
 
 ### Typography排版
@@ -549,34 +555,109 @@ export default App;
 - Menu 元素为 `ul`，因而仅支持 [`li` 以及 `script-supporting` 子元素](https://html.spec.whatwg.org/multipage/grouping-content.html#the-ul-element)。因而你的子节点元素应该都在 `Menu.Item` 内使用。
 - Menu 需要计算节点结构，因而其子元素仅支持 `Menu.*` 以及对此进行封装的 HOC 组件。
 
- 第一种使用方式：样式都是官方提供的默认样式和交互方式
+#### 4.X,5.Xui版本的菜单
+
+菜单数据化，更加简单，菜单的child项，以关键字**children** 标记。Menu组件会自动分级显示。
 
 ```react
 import { Menu } from 'antd';   1.导出核心方法
 
 function getItem(label, key, icon, children, type) {
   return {
-    label,    //显示的标题名字
-    key,    //标记唯一  也是路由
-    icon,    //图标
-    children,  //孩子项
-    type,  //  type: 'group', 定义类型为 group 时，会作为分组处理:
-    title, //   设置收缩时展示的悬浮标题
+    label,
+    key,
+    icon,
+    children,
+    type,
   };
 }
 
-const items = [  3.只要使用规定数据字段，就能渲染出来数据
-  getItem('收件箱', 'sub1', <MailOutlined />, [
-    getItem('工作用信箱', '5'),
-    getItem('生活用信箱', '6'),
-  ]),
 
-  getItem('飞虎战队', 'feiHu', <AndroidOutlined />, [
-    getItem('飞虎1号', '13'),
-     getItem('飞虎2号', '14')
-    ]),
+const items = [
+  {
+    label: 'Navigation One',   // label可以是字符串，也可以是JSX， 自定义dom结构
+    key: 'mail',
+    icon: <MailOutlined />,
+  },
+  {
+    label: (<Link to={"/home"}>  // 例如这样 加路由a标签
+      <span>home页</span>
+      </Link>),
+    key: 'app',
+    icon: <AppstoreOutlined />,
+    disabled: true,
+  },
+                     演示三级菜单--开始    只要加children字段
+  {
+    label: 'Navigation Two',
+    key: 'app',
+    icon: <AppstoreOutlined />,
+    children: [
+      {
+        label: 'Option 1',
+        key: 'setting:1',
+        children: [
+          {
+            label: 'Option 1',
+            key: 'setting:1',
+          },
+          {
+            label: 'Option 2',
+            key: 'setting:2',
+          },
+        ],
+      },
+      {
+        label: 'Option 2',
+        key: 'setting:2',
+      },
+    ]
+  },
+                 演示三级菜单--结束
+  {
+    label: 'Navigation Three - Submenu',
+    key: 'SubMenu',
+    icon: <SettingOutlined />,
+    children: [
+      {
+        type: 'group',
+        label: 'Item 1',
+        children: [
+          {
+            label: 'Option 1',
+            key: 'setting:1',
+          },
+          {
+            label: 'Option 2',
+            key: 'setting:2',
+          },
+        ],
+      },
+      {
+        type: 'group',
+        label: 'Item 2',
+        children: [
+          {
+            label: 'Option 3',
+            key: 'setting:3',
+          },
+          {
+            label: 'Option 4',
+            key: 'setting:4',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: (
+      <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
+        Navigation Four - Link
+      </a>
+    ),
+    key: 'alipay',
+  },
 ];
-
 
   <Menu
       onClick={onClick}
@@ -590,9 +671,11 @@ const items = [  3.只要使用规定数据字段，就能渲染出来数据
     />
 ```
 
-第二种自定义方式
+#### 3.x版本之前的菜单
 
 **Menu.Item**  支持自定义单项的样式自定义 结构自定义，根据这个结构，可以动态创建自己的路由菜单。
+
+##### 案例1    一级菜单
 
 ```react
 <Menu
@@ -613,6 +696,176 @@ const items = [  3.只要使用规定数据字段，就能渲染出来数据
 
     </Menu>
 ```
+
+##### 案例1    二级菜单
+
+Menu.SubMenu标签，包裹Menu.Item子标签。
+
+```react
+  <Menu
+    onClick={onClick}
+    style={{
+      width: 256,
+    }}
+    defaultSelectedKeys={['1']}
+    defaultOpenKeys={['sub1']}
+    mode="inline"
+    >
+<Menu.SubMenu key={1} title={ <span><InstagramOutlined /><span>一级标题</span></span>}>
+
+      <Menu.Item key={11}>
+        <Link to={'/home/about'}>
+        <InstagramOutlined />
+          <span>自定义child</span>
+        </Link>
+      </Menu.Item>
+
+</Menu.SubMenu>
+   
+    
+      <Menu.Item key={2}>
+        <Link to={'/home/about'}>
+        <InstagramOutlined />
+          <span>自定义child</span>
+        </Link>
+      </Menu.Item>
+
+    </Menu>
+```
+
+### Pagination分页
+
+```react
+import React from 'react';
+import { Pagination } from 'antd';
+const App = () => <Pagination defaultCurrent={1} total={50} />;
+export default App;
+```
+
+
+
+```react
+import React ,{useState}from 'react';
+import { Pagination } from 'antd';
+
+const onShowSizeChange = (current, pageSize) => {
+  console.log(current, pageSize);
+};
+
+const App = () => {
+  const [current, setCurrent] = useState(3);
+  const onChange = (page) => {
+    console.log(page);
+    setCurrent(page);
+  };
+ return <>
+  <Pagination
+    showSizeChanger={false}
+    onShowSizeChange={onShowSizeChange}   //默认每页10条  数量
+    onChange={onChange}  // 受控组件 记录当前页
+    defaultCurrent={3} //默认页码
+    total={300}  //数据总量
+    showQuickJumper //显示页码跳转
+
+  />
+</>
+};
+
+export default App;
+```
+
+### Steps步骤条
+
+使用Steps组件，items属性传参，对象中至少包含title标题，控制current数字，从0开始。
+
+```
+import React from 'react';
+import { Steps } from 'antd';
+
+const description = '这是一个描述';
+const App = () => (
+  <Steps
+    current={1}
+    items={[
+      {
+        title: 'Finished',
+    
+      },
+      {
+        title: 'In Progress',
+        description,
+        subTitle: '副标题',
+      },
+      {
+        title: 'Waiting',
+        description,
+      },
+    ]}
+  />
+);
+export default App
+```
+
+
+
+## 第四部分： 数据录入
+
+基础用法
+
+```react
+import React, { useState } from 'react';
+import { AutoComplete } from 'antd';
+
+const mockVal = (str, repeat = 1) => ({
+  value: str.repeat(repeat),
+});
+
+const App = () => {
+  const [value, setValue] = useState('');
+  const [options, setOptions] = useState([]);
+  const [anotherOptions, setAnotherOptions] = useState([]);
+
+  const getPanelValue = (searchText) =>
+    !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+
+  const onSelect = (data) => {
+    console.log('onSelect', data);
+  };
+
+  const onChange = (data) => {
+    // console.log(data)//这个是输入框的值
+    setValue(data);
+  };
+  return (
+    <>
+
+      <br />
+      <br />
+      <AutoComplete
+        value={value}
+        options={anotherOptions} //类似下拉的引导数据
+        style={{
+          width: 200,
+        }}
+        onSelect={onSelect}// 这个是选中的那一条
+        onSearch={(text) => {
+          console.log(text)//这个是输入框的值
+          return setAnotherOptions(getPanelValue(text))}
+        }
+        onChange={onChange} // 同步value
+        placeholder="control mode"
+      />
+    </>
+  );
+};
+export default App;
+```
+
+
+
+
+
+
 
 
 
