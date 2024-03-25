@@ -946,7 +946,7 @@ app.clickEvent()    在js中 故也可以调用。
 	</form>
 .prevent//阻止默认事件
 
-
+修饰符是以点开头的特殊后缀，表明指令需要以一些特殊的方式被绑定。例如 .prevent 修饰符会告知 v-on 指令对触发的事件调用 event.preventDefault()：
 
 
 
@@ -4391,3 +4391,14 @@ export default new Router({
 
 注意点： components 复数了。
 
+
+
+使用第三方插件：
+
+swiper 开源、免费、强大的触摸滑动插件
+
+swiper 是纯javascript打造的滑动特效插件，面向手机、平板电脑等移动终端
+
+Swiper 能实现触屏焦点图、触屏Tab切换、触屏轮播图切换等常用效果
+
+https://swiperjs.com/vue

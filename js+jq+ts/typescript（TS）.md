@@ -74,6 +74,18 @@ let string1:string = "000"
 string1 = 111  // 报错
 ```
 
+##### 元组类型
+
+元组类型是ts新增的类型之一
+
+元组最重要的特性是可以限制数组元素的个数和类型
+
+```
+let x: [string, number]; // 类型必须匹配且个数必须为2
+```
+
+
+
 
 
 定义数组：
@@ -95,7 +107,7 @@ let arr2:[string,number,boolean] = ['string',3,false]
 
 ```
 
-### 枚举类型
+### 枚举类型enum
 
 作用： 语义化， 只需记住变量名，自动获取code。标识状态
 
@@ -246,7 +258,7 @@ function getinfo(name:string,age:number=20):string{
     if(age){
         return `${name}`
     }else{
-        return `${name}---年两保密`
+        return `${name}---年龄保密`
     }
 }
 ```
@@ -292,7 +304,7 @@ java中方法的重载指的是两个或者两个以上同名函数，但是他�
 
 ts中的重载，通过为同一个函数提供多个函数类型定义来实现多种功能的目的。
 
-```
+```tsx
 
 function css(a){}
 
@@ -316,7 +328,7 @@ alert(getinfo(20))
 
 第二种：
 
-```
+```tsx
 function getinfo(name:string):string;
 function getinfo(name:string,age:number):string;
 
@@ -333,7 +345,7 @@ alert(getinfo("tom",20))
 
 8 箭头函数 es6
 
-```
+```tsx
 setTimeout(()=>{
     alert(0)
     },500)
@@ -343,7 +355,7 @@ setTimeout(()=>{
 
 ### 5.1   es5中的类
 
-```
+```tsx
     // 构造函数和原型链上增加方法 
     function Person() {
         this.name = "tom";
@@ -837,11 +849,11 @@ js有五种基本类型 string、number、boolean、null、undefined，这几种
 
 ```csharp
 let myFavoriteNumber = 'seven';
-myFavoriteNumber = 7;
+myFavoriteNumber = 7; 后面再赋值 提示：  不能将类型“number”分配给类型“string”。
 
 // 等价于下边
 let myFavoriteNumber: string = 'seven';
-myFavoriteNumber = 7;
+
 ```
 
 ## 联合类型
@@ -1053,7 +1065,7 @@ let mySum = function (x: number, y: number): number {
 
 Typescript添加了对函数变量和返回值类型的限定
 
-### 接口定义函数类型
+### 接口定义函数类型 
 
 
 
@@ -1804,6 +1816,12 @@ function sum(...result:number[]):number{
 }
 alert(sum(1,2))
 ```
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,19 @@
 # vue3
 
+https://cn.vuejs.org/
+
+https://v3.cn.vuejs.org/  这两个是同一个网站
+
+---
+
+
+
+这个是vue2
+
+https://v2.cn.vuejs.org/  
+
+ Vue 2 已经终止支持且不再维护。 [请升级到 Vue 3](https://cn.vuejs.org/) 或了解有关 [Vue 2 终止支持 (EOL)](https://v2.cn.vuejs.org/eol/) 的信息。
+
 # 引言
 
 **问题的起源**
@@ -409,7 +423,7 @@ function useRemoveStudent(){
 # Vue3.0新增特性
 
 1. 性能比Vue2.x快1.2倍
-2. 加入了按需导入按需编译，体积相比Vue2.X变小
+2. 加入了按需导入按需编译，体积相比Vue2.X变小           ref 变量  使用那个引用那个 ，差别化引入。
 3. 组合API
 4. 更好的TypeScript支持
 5. 暴露了自定义渲染的API
@@ -444,7 +458,12 @@ function useRemoveStudent(){
 ## 4. 组合API 
 
 ```
-1. 提供了setup函数，setup函数是组合API的入口函数，在此函数中定义变量需要通过import引入import {ref} from 'vue'在申明变量时let a = ref(0)当变量发送改变时，Vue会自动更新UI(ref函数注意点ref函数只能监听简单的数据类型变化，不能监听复杂的数据类型变化（对象/数组）),如果想监听复杂数据类型Vue3.0提供了一个import {reacive} from ‘Vue’的方法
+1. 提供了setup函数，setup函数是组合API的入口函数，
+在此函数中定义变量需要通过
+import引入import {ref} from 'vue'
+在申明变量时let a = ref(0)当变量发送改变时，Vue会自动更新UI(ref函数注意点ref函数只能监听简单的数据类型变化，不能监听复杂的数据类型变化（对象/数组）),如果想监听复杂数据类型Vue3.0提供了一个
+import {reacive} from ‘Vue’
+的方法
 
 2. 在组合API中，如果想定义方法，不用到methods中，直接在setup中定义即可
 
@@ -474,11 +493,14 @@ function useRemoveStudent(){
         }}
     现在
    let paramObj = reactive({})
+   
+   
+使用方法
+ function clickHandle(){
+   currentId.value = 88   
+ }
+   
 ```
-
-
-
-
 
 
 
@@ -498,6 +520,8 @@ function useRemoveStudent(){
 2. reactive参数必须是对象（json/arr）如果reactive传递了其他对象，默认情况下修改对象，界面不会自动更新，如果想更新，可以通过重新赋值的方式
 ```
 
+
+
 ## 7. ref
 
 ```
@@ -507,6 +531,44 @@ function useRemoveStudent(){
 
 3. ref 注意点：在Vue中使用ref的值不用通过Value来获取，在JS中使用ref的值必须通过Value来获取
 ```
+
+
+
+```vue
+
+<template>
+  <div class="home">
+    home页面9 <br>
+    <button @click="test">修改</button>
+    {{ list }}
+  </div>
+</template>
+
+<script setup>
+
+import { ref, reactive } from "vue"
+
+const message = ref("11")
+const list = reactive({
+  data:[12]
+})
+
+const test = () => {
+
+  message.value = 99;  //使用简单变量
+
+  list.data = [111,22,33]  //使用复杂变量
+
+}
+
+</script>
+
+<style scoped></style>
+```
+
+
+
+
 
 
 

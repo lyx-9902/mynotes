@@ -4,10 +4,6 @@
 
 快应用是九大手机厂商基于硬件平台共同推出的新型应用生态。用户无需下载安装，即点即用，享受原生应用的性能体验。
 
-
-
-![image-20210420141432896](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\image-20210420141432896.png)
-
 # uni-app 开发微信小程序
 
 `uni-app`是一个使用`Vue.js` 开发所有前端应用的框架，开发者编写一套代码，可发布到`iOS`、`Android`、`H5`、以及各种小程序（微信/支付宝/百度/头条/QQ/钉钉）等多个平台。
@@ -29,10 +25,9 @@
 - `HBuilderX`是通用的前端开发工具，但为`uni-app`做了特别强化。
 - `HBuilderX`提供了一些插件，可直接下载安装，具体如下图： `工具` > `插件安装`
 
-![image-20210420143146038](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\image-20210420143146038.png)
-
 一、uniapp介绍
 1.uniapp做混合开发的好处：
+
 2. 开发环境&IDE工具：
 二、使用步骤
 第一步：打开HBuilderX选择文件->新建项目->选择uniapp项目
@@ -44,8 +39,14 @@
 
 
 
-2021.04.21
 
-![image-20210421102431972](C:\Users\luyunxiao\AppData\Roaming\Typora\typora-user-images\image-20210421102431972.png)
+
+
+
+
+
+
+
+
 
 
