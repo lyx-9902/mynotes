@@ -54,7 +54,7 @@ npm install element-plus --save
 
 main.js
 
-```
+```vue
 // main.ts
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'  <--
