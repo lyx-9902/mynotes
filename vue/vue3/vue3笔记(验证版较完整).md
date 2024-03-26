@@ -2953,6 +2953,10 @@ app.directive("beauty", (element, { value }) => {
 <p v-beauty="'添加文字'">88</p>
 ```
 
+详见10小结
+
+
+
 ###### app.mount
 
 ```
@@ -3038,7 +3042,7 @@ app组件放置 组件视口标签
 <router-view></router-view>
 ```
 
-## vue的内置组件
+## 9.vue的内置组件
 
 ### 01  component 组件
 
@@ -3204,6 +3208,380 @@ https://blog.csdn.net/m0_71933813/article/details/129542249
                             版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
 
 原文链接：https://blog.csdn.net/m0_71933813/article/details/129542249
+
+## 10 vue3的自定义指令
+
+​	[Vue3自定义指令directives介绍](https://blog.csdn.net/weixin_43953518/article/details/133750117?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-133750117-blog-135869094.235^v43^pc_blog_bottom_relevance_base8&spm=1001.2101.3001.4242.1&utm_relevant_index=3)
+
+指令是带有 v- 前缀的特殊 attribute。[Vue](https://so.csdn.net/so/search?q=Vue&spm=1001.2101.3001.7020) 提供了许多内置指令，例如：v-bind、v-html等。
+
+我们可以创建自己想要的指令，使用必须以`v-`为前缀
+
+##### **分类**
+
+局部指令：组件中通过`directives`选项实现，只能在当前组件中使用
+全局指令：应用实例的`directive`方法，可以在任意组件中被使用（所有内置指令都为全局指令）
+
+自定义指令跟组件一样，也是有生命周期的，下面看一下他的生命周期
+
+生命周期介绍
+created：在绑定元素的 attribute 或事件监听器被应用之前调用；
+beforeMount：当指令第一次绑定到元素并且在挂载父组件之前调用；
+mounted：在绑定元素的父组件被挂载后调用，大部分自定义指令都写在这里；
+beforeUpdate：在更新包含组件的 VNode 之前调用；
+updated：在包含组件的 VNode 及其子组件的 VNode 更新后调用；
+beforeUnmount：在卸载绑定元素的父组件之前调用；
+unmounted：当指令与元素解除绑定且父组件已卸载时，只调用一次；
+钩子参数介绍
+每个钩子函数中有回调参数，回调参数有四个，含义基本上和 Vue2 一致：
+
+el：指令所绑定的元素，可以用来直接操作 DOM（可以进行事件绑定）。
+binding：我们通过自定义指令传递的各种参数
+vnode：Vue 编译生成的虚拟节点。
+oldVnode：上一个虚拟节点，仅在 update 和 componentUpdated 钩子中可用
+binding包含以下属性
+
+value：传递给指令的值。例如在 v-my-directive=“1 + 1” 中，值是 2。
+oldValue：之前的值，仅在 beforeUpdate 和 updated 中可用。无论值是否更改，它都可用。
+arg：传递给指令的参数 (如果有的话)。例如在 v-my-directive:foo 中，参数是 “foo”。
+modifiers：一个包含修饰符的对象 (如果有的话)。例如在 v-my-directive.foo.bar 中，修饰符对象是 { foo: true, bar: true }。
+instance：使用该指令的组件实例。
+dir：指令的定义对象。
+
+**指令的钩子**
+
+```
+const myDirective = {
+  // 在绑定元素的 attribute 前
+  // 或事件监听器应用前调用
+  created(el, binding, vnode, prevVnode) {
+    // 下面会介绍各个参数的细节
+  },
+  // 在元素被插入到 DOM 前调用
+  beforeMount() {},
+  // 在绑定元素的父组件
+  // 及他自己的所有子节点都挂载完成后调用
+  mounted() {},
+  // 绑定元素的父组件更新前调用
+  beforeUpdate() {},
+  // 在绑定元素的父组件
+  // 及他自己的所有子节点都更新后调用
+  updated() {},
+  // 绑定元素的父组件卸载前调用
+  beforeUnmount() {},
+  // 绑定元素的父组件卸载后调用
+  unmounted() {}
+}
+
+```
+
+##### 指令的使用
+
+简单需求： 当某个元素挂载完成后可以自动获取焦点
+
+默认的实现方式，假如有多个地方需要使用时，这种实现方式的代码会显得繁杂冗余
+
+```vue
+<template>
+  <div>
+    <input type="text" ref="input" />
+  </div>
+</template>
+
+<script>
+import { ref, onMounted } from "vue";
+
+export default {
+  setup () {
+    const input = ref(null);
+
+    onMounted(() => {
+      input.value.focus();
+    })
+
+    return {
+      input
+    }
+  }
+}
+</script>
+
+<style scoped>
+</style>
+
+
+```
+
+**使用自定义指令实现**
+
+```vue
+<template>
+  <input type="text" v-focus />
+</template>
+<script setup>
+// 在模板中启用 v-focus
+const vFocus = {
+  mounted: (el) => el.focus()
+}
+</script>
+
+```
+
+注：在`<script setup>` 中，任何以 `v` 开头的驼峰式命名的变量都可以被用作一个自定义指令，`vFocus` 即可以在模板中以 `v-focus` 的形式使用
+
+如果不使用 `<script setup>`，自定义指令可以通过 `directives` 选项注册
+
+```vue
+<template>
+  <input type="text" v-focus />
+</template>
+<script>
+export default {
+  setup() {
+    /*...*/
+  },
+  directives: {
+    focus: {
+       mounted: (el) => el.focus()
+    }
+  }
+}
+</script>
+
+```
+
+也可以全局注册该指令，这样所有组件都可以使用`v-focus`
+
+```vue
+const app = createApp({})
+
+// 使 v-focus 在所有组件中都可用
+app.directive('focus', {
+ 	mounted: (el) => el.focus()
+})
+
+```
+
+##### 指令的参数和修饰符
+
+假如我们使用这样一个指令`v-example`
+
+```
+<div v-example:params.lazy="someValue"></div>
+
+```
+
+此时指令钩子函数的binding 参数会是一个这样的对象：
+
+```vue
+{
+  arg: 'params',
+  modifiers: { lazy: true },
+  value: /* `someValue` 的值 */,
+  oldValue: /* 上一次更新时 `someValue` 的值 */
+}
+
+```
+
+也就是说指令`:`后面跟着的是指令的参数，`.`后面跟着的是指令的修饰符
+
+示例：背景高亮
+
+```vue
+<template>
+  <div>
+    <div v-highlight>默认的高亮颜色</div>
+    <div v-highlight="{ bgColor: 'red', color: 'yellow' }">这是一个简单的例子</div>
+  </div>
+</template>
+<script>
+export default {
+  setup() {
+    /*...*/
+  },
+  directives: {
+    highlight: {
+      mounted(el, binding) {
+        console.log('binding', binding)
+        const color = binding.value && binding.value.color ? binding.value.color : '#fff'
+        const bgColor = binding.value && binding.value.bgColor ? binding.value.bgColor : 'blue'
+        el.style.color = color
+        el.style.backgroundColor = bgColor
+      }
+    }
+  }
+}
+</script>
+
+```
+
+示例2：
+
+```vue
+<template>
+  <div>
+    <div v-letter:uppercase>hello world</div>
+  </div>
+</template>
+<script>
+export default {
+  setup() {
+    /*...*/
+  },
+  directives: {
+    letter: {
+      mounted(el, binding) {
+        const text = el.innerHTML
+        if (binding.arg === 'uppercase') {
+          el.innerHTML = text.toUpperCase()
+        } else if (binding.arg === 'lowercase') {
+          el.innerHTML = text.toLowerCase()
+        } else {
+          el.innerHTML = text.split('')
+        }
+      }
+    }
+  }
+}
+</script>
+
+```
+
+其他相关：[指令](https://blog.csdn.net/qq_43231248/article/details/135869094)
+
+## 11 vue3的getCurrentInstance获取组件实例踩坑记录
+
+一、getCurrentInstance基本用法
+我们可以通过 getCurrentInstance这个函数来返回当前组件的实例对象,也就是当前vue这个实例对象
+Vue2中，可以通过this来获取当前组件实例；
+Vue3中，在setup中无法通过this获取组件实例，console.log(this)打印出来的值是undefined。
+
+在Vue3中，getCurrentInstance()可以用来获取当前组件实例
+常见的用途包括：
+
+访问组件实例的属性：可以通过 getCurrentInstance().ctx 或 getCurrentInstance().proxy 来获取当前组件实例的属性。例如，可以使用 getCurrentInstance().ctx.$props 访问组件的 props 属性。
+
+调用组件实例的方法：可以通过 getCurrentInstance().ctx 或 getCurrentInstance().proxy 来调用当前组件实例的方法。例如，可以使用 getCurrentInstance().ctx.$emit 来触发组件的自定义事件。
+
+在生命周期钩子中使用：可以在组件的生命周期钩子中使用 getCurrentInstance() 来获取当前组件实例，以便在钩子函数中访问组件实例的属性或调用组件实例的方法。
+
+请注意，getCurrentInstance 的返回值是一个组件实例对象，可以通过 .ctx 来访问该实例的上下文对象，或者通过 .proxy 来访问该实例的代理对象。两者的区别在于，通过 .ctx 访问的是真实的组件实例，而通过 .proxy 访问的是一个代理对象，该代理对象可以在模板中直接使用。
+
+基本使用：
+
+```vue
+import { getCurrentInstance, onMounted} from 'vue'
+export default {
+    setup() {
+        onMounted(() => {
+            const instance = getCurrentInstance()
+            console.log('实例', instance)
+        })
+        return {}
+     }
+
+```
+
+我们可以根据自己的需求使用当前实例的一些属性和方法，`比如我们获取当前组件中某个div的dom`
+
+代码如下：
+
+```vue
+<template>
+    <div id="cx-container" :ref="refName">
+    </div>
+</template>
+<script>
+import { getCurrentInstance, onMounted} from 'vue'
+export default {
+    setup() {
+        const refName = 'cxContainer'
+        onMounted(() => {
+            const instance = getCurrentInstance().ctx
+            const dom = instance.$refs[refName]
+            console.log('dom', dom)
+        })
+        return {
+       		 refName 
+        }
+     }
+</script>
+
+```
+
+**二、getCurrentInstance使用注意点**
+
+**1. getCurrentInstance 只能在 setup 或生命周期钩子中使用**
+
+举个例子：
+
+```vue
+<script>
+import { getCurrentInstance, onMounted} from 'vue'
+export default {
+    setup() {
+        const refName = 'cxContainer'
+        const onResize = () => {
+            const instance = getCurrentInstance()
+        	console.log('instance', instance)		
+        }
+        onMounted(() => {
+            window.addEventListener('resize', onResize)
+        })
+        return {
+       		 refName 
+        }
+     }
+</script>
+
+```
+
+以上代码我们将`const instance = getCurrentInstance()`放在了`onResize`函数中，然后在`onMounted`中监听浏览器尺寸变化，尺寸变化就出发onResize函数。
+**打印结果如下：**
+
+
+
+可以看到instance为null,
+这时如果我们将const instance = getCurrentInstance()放到setup函数中，或者onMounted中就可以成功获取实例
+
+如需在 setup或生命周期钩子外使用，先在 setup 中调用 getCurrentInstance() 获取该实例然后再使用。
+
+
+**2 getCurrentInstance**线上环境报错问题**
+
+**本地代码**
+
+```
+<script>
+    import {getCurrentInstance} from "vue";
+    export default {
+      setup() {
+         const {ctx} = getCurrentInstance();
+         console.log('ctx', ctx)
+      }
+    
+</script>
+
+```
+
+以上代码在本地开发调试没有问题，在线上环境会报错，`如果通过这个ctx.$refs[xxx]获取dom，线上就会有问题`。
+**解决方案**
+
+> 使用proxy代替ctx,proxy线上不会出现问题
+
+```
+const { proxy } = getCurrentInstance()  
+
+```
+
+**三、在vue3中不推荐使用getCurrentInstance获取组件实例**
+
+官方解释：
+主要还是 getCurrentInstance 是一个内部的API，并不是公开的API，使用内部API去实现一些业务功能，可能会因为后续 Vue 的版本迭代而造成业务上的 BUG。
+
+至于其他的一些常用属性和方法，vue3中的setup中提供了props和contexts上下文。
+
+[官方setup用法](https://cn.vuejs.org/api/composition-api-setup.html#setup-context)
 
 
 
