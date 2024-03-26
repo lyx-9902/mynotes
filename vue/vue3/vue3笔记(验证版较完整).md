@@ -2988,11 +2988,222 @@ setTimeout(() => {
 app.use(pinia)
 ```
 
+### 8 使用路由 视口标签
+
+(注意：插件和vue2的是不一样的)
+
+```
+npm install vue-router@4.0.0-beta.13
+
+```
+
+router.js稍作改造
+
+```
+import Vue from 'vue'
+
+import { createRouter, createWebHistory } from 'vue-router'
+
+const routerHistory = createWebHistory() //
+
+import test from '@/views/test.vue'
+
+export default createRouter({
+  history: routerHistory,
+  routes: [
+    {
+      path: '/',
+      name: 'test',
+      component: test
+    }
+  ]
+})
+
+```
+
+main.js稍作改造
+
+```
+import { createApp } from 'vue';
+import App from './App.vue'
+
+import router from './router'
+
+createApp(App).use(router).mount('#app')
+```
+
+app组件放置 组件视口标签
+
+```
+<router-view></router-view>
+```
+
+## vue的内置组件
+
+### 01  component 组件
+
+https://blog.csdn.net/weixin_52203618/article/details/127683606
+
+ <component>是一个内置组件，is是固定的属性，依赖 "is" 的值来决定渲染哪一个组件；现在来通过对以上代码的一个修改！
+
+```
+<div id="app">
+    
+    <header>
+        <ul>
+            <li v-for="item in nav" :key="item.id" @click="handChange(item)" :class="isChoose == item.id?'active':''">{{item.title}}</li>
+        </ul>
+    </header>
+ 
+    <component :is="isChoose"></component>
+ 
+</div>
+<script>
+    Vue.component("home",{
+        template:`
+            <div style="padding:10px">
+                / 首页   
+            </div>
+        `
+    })
+ 
+    Vue.component("server",{
+        template:`
+            <div style="padding:10px">
+                / 服务    
+            </div>
+        `
+    })
+ 
+    Vue.component("about",{
+        template:`
+            <div style="padding:10px">
+                / 关于
+            </div>
+        `
+    })
+ 
+    new Vue({
+        el:'#app',
+        data:{
+            nav:[{title:'首页',id:'home'},{title:'服务',id:'server'},{title:'关于',id:'about'}],
+            isChoose: 'home'  
+        },
+        methods:{
+            handChange(item){
+                // console.log(item);
+                this.isChoose = item.id
+            }
+        }
+    })
+</script>
+```
+
+### 02.[slot](https://v2.cn.vuejs.org/v2/api/#slot)
+
+https://v2.cn.vuejs.org/v2/api/#slot
+
+- **Props**：
+
+  - `name` - string，用于命名插槽。
+
+- **Usage**：
+
+  `<slot>` 元素作为组件模板之中的内容分发插槽。`<slot>` 元素自身将被替换。
+
+### 03.[keep-alive](https://v2.cn.vuejs.org/v2/api/#keep-alive)
+
+[keep-alive](https://v2.cn.vuejs.org/v2/api/#keep-alive)
+
+- **Props**：
+
+  - `include` - 字符串或正则表达式。只有名称匹配的组件会被缓存。
+  - `exclude` - 字符串或正则表达式。任何名称匹配的组件都不会被缓存。
+  - `max` - 数字。最多可以缓存多少组件实例。
+
+- **用法**：
+
+  `<keep-alive>` 包裹动态组件时，会缓存不活动的组件实例，而不是销毁它们。和 `<transition>` 相似，`<keep-alive>` 是一个抽象组件：它自身不会渲染一个 DOM 元素，也不会出现在组件的父组件链中。
+
+  当组件在 `<keep-alive>` 内被切换，它的 `activated` 和 `deactivated` 这两个生命周期钩子函数将会被对应执行。
+
+```
+<!-- 基本 -->
+<keep-alive>
+  <component :is="view"></component>
+</keep-alive>
+
+<!-- 多个条件判断的子组件 -->
+<keep-alive>
+  <comp-a v-if="a > 1"></comp-a>
+  <comp-b v-else></comp-b>
+</keep-alive>
+
+<!-- 和 `<transition>` 一起使用 -->
+<transition>
+  <keep-alive>
+    <component :is="view"></component>
+  </keep-alive>
+</transition>
+```
+
+### 04 .[transition](https://v2.cn.vuejs.org/v2/api/#transition)
+
+[过渡：进入，离开和列表](https://v2.cn.vuejs.org/v2/guide/transitions.html)
+
+### 05 TransitionGroup
+
+[官网详解](https://cn.vuejs.org/guide/built-ins/transition-group.html#transitiongroup)
+
+`<TransitionGroup>` 是一个内置组件，用于对 `v-for` 列表中的元素或组件的插入、移除和顺序改变添加动画效果。
 
 
 
 
 
+
+
+### 使用场景：vue组件缓存与动画效果
+
+https://blog.csdn.net/m0_71933813/article/details/129542249
+
+```vue
+<section class="app-main">
+    <router-view v-slot="{ Component, route }">
+      <transition name="fade-transform" mode="out-in">
+        <keep-alive :include="tagsViewStore.cachedViews">
+          <component v-if="!route.meta.link" :is="Component" :key="route.path"/>
+        </keep-alive>
+      </transition>
+    </router-view>
+    <iframe-toggle />
+  </section>
+```
+
+  
+
+主要是利用了[router-view](https://so.csdn.net/so/search?q=router-view&spm=1001.2101.3001.7020)组件的插槽来实现，使用<transition>和<keep-alive>组件来包裹路由组件
+
+ <component :is="Component" :key="route.path"/>
+
+主要是利用了router-view组件的插槽来实现，使用<transition>和<keep-alive>组件来包裹路由组件
+
+注解：
+
+<router-view> v-slot Component是router-view要显示的组件对象 route路由是什么
+
+<transition>name定义要过度的动画效果也就是css样式
+
+<transition>mode过渡模式（执行的顺序）先进来在出去
+
+<keep-alive> max缓存组件数量，限定缓存5
+
+<component>is动态渲染组件 判断条件如果为真就渲染组件
+————————————————
+
+                            版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
+
+原文链接：https://blog.csdn.net/m0_71933813/article/details/129542249
 
 
 
