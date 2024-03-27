@@ -3695,7 +3695,31 @@ import cesium from 'vite-plugin-cesium';
   </style>
 ```
 
+### 14 浅说一下 import.meta.glob()
 
+[详解](https://blog.csdn.net/pig_ning/article/details/133856944)
+
+`import.meta.glob()` 是一个 ES 模块的特殊属性，用于动态导入多个模块，`import.meta.glob()` 方法接受一个`模式字符串`作为参数，并返回一个`Promise`，该Promise 析为一个对象，该对象包含匹配该模式的所有模块的[键值对](https://so.csdn.net/so/search?q=键值对&spm=1001.2101.3001.7020)。使用 `import.meta.glob()` 可以方便地批量导入模块，而不需要手动一个一个地导入。
+这在一些需要动态加载模块的场景下非常有用，例如在构建工具中自动加载插件、动态加载路由等。
+
+
+
+`import.meta.glob` 是一个 [Vite](https://so.csdn.net/so/search?q=Vite&spm=1001.2101.3001.7020) 特有的功能，它允许你在模块内部匹配多个模块，基于文件系统的模式。
+
+```vue
+const modules = import.meta.glob('./../../views/**/*.vue') //
+
+export const loadView = (view) => {
+  let res;
+  for (const path in modules) {
+    const dir = path.split('views/')[1].split('.vue')[0];
+    if (dir === view) {
+      res = () => modules[path]();//获取组件实例
+    }
+  }
+  return res;
+}
+```
 
 
 
