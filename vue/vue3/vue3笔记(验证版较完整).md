@@ -3583,6 +3583,146 @@ const { proxy } = getCurrentInstance()
 
 [官方setup用法](https://cn.vuejs.org/api/composition-api-setup.html#setup-context)
 
+## 12 setup下的组件name命名插件
+
+在[vue3](https://so.csdn.net/so/search?q=vue3&spm=1001.2101.3001.7020)组合式api中，我们可以如下命名
+
+```vue
+<script >
+export default
+name :  组件名字 ,
+setup(){ }
+```
+
+这样便可以轻松命名组件，但是我们通常使用setup[语法糖](https://so.csdn.net/so/search?q=语法糖&spm=1001.2101.3001.7020)形式(<script setup>)来写代码，一旦使用语法糖，便不能再使用上述命名方法，以下我统计了一些setup语法糖的组件命名方法
+
+第一种：写两个script标签，一个专门用来命名。
+
+第二种：插件  **unplugin-vue-setup-extend-plus**
+
+1.安装
+
+```
+npm i unplugin-vue-setup-extend-plus
+```
+
+2.1vit.config.js配置
+
+```vue
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+ 
+import vueSetupExtend from 'unplugin-vue-setup-extend-plus/vite'
+ 
+export default defineConfig({
+  plugins: [vue(),vueSetupExtend({
+    enableAutoExpose: true
+  })],
+})
+```
+
+2.2在webpack环境下vue.config.js配置
+
+```vue
+module.exports = {
+  plugins: [
+    require('unplugin-vue-setup-extend-plus/webpack').default({
+        enableAutoExpose: true
+     })
+  ]
+}
+```
+
+3. 然后就可以在script上随意定义组件名了
+
+   ```
+   <script setup name="name</script>
+   ```
+
+
+
+## 13vue3【vite】中使用cesium
+
+## 本地安装[cesium](https://so.csdn.net/so/search?q=cesium&spm=1001.2101.3001.7020) 
+
+安装vite-plugin-cesium：
+
+```
+npm i -D vite-plugin-cesium
+```
+
+安装cesium：
+
+```
+npm i -S cesium
+```
+
+vite.config.js中配置如下：
+
+```
+import cesium from 'vite-plugin-cesium';
+```
+
+![](https://img-blog.csdnimg.cn/5267ccdfa6f34bf5a6b5e797e425cec0.png)
+
+```vue
+<template>
+    <div id="cesiumContainer"></div>
+  </template>
+  
+  <script setup>
+  import * as Cesium from 'cesium';
+  import { onMounted } from 'vue';
+  onMounted(() => {
+    const viewer = new Cesium.Viewer('cesiumContainer',{
+      infoBox: false, // 禁用沙箱，解决控制台报错
+    });
+  })
+  
+  </script>
+  
+  <style scoped>
+  #cesiumContainer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  </style>
+```
+
+### 14 浅说一下 import.meta.glob()
+
+[详解](https://blog.csdn.net/pig_ning/article/details/133856944)
+
+`import.meta.glob()` 是一个 ES 模块的特殊属性，用于动态导入多个模块，`import.meta.glob()` 方法接受一个`模式字符串`作为参数，并返回一个`Promise`，该Promise 析为一个对象，该对象包含匹配该模式的所有模块的[键值对](https://so.csdn.net/so/search?q=键值对&spm=1001.2101.3001.7020)。使用 `import.meta.glob()` 可以方便地批量导入模块，而不需要手动一个一个地导入。
+这在一些需要动态加载模块的场景下非常有用，例如在构建工具中自动加载插件、动态加载路由等。
+
+
+
+`import.meta.glob` 是一个 [Vite](https://so.csdn.net/so/search?q=Vite&spm=1001.2101.3001.7020) 特有的功能，它允许你在模块内部匹配多个模块，基于文件系统的模式。
+
+```vue
+const modules = import.meta.glob('./../../views/**/*.vue') //
+
+export const loadView = (view) => {
+  let res;
+  for (const path in modules) {
+    const dir = path.split('views/')[1].split('.vue')[0];
+    if (dir === view) {
+      res = () => modules[path]();//获取组件实例
+    }
+  }
+  return res;
+}
+```
+
+
+
 
 
 ## 其他
