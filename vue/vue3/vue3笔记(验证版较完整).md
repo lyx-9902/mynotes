@@ -2234,6 +2234,7 @@ defineExpose({ childNum })
 父组件的dom事件，
 @click="print($event)"   获取的是事件对象
 @click="print($refs)"   获取所有子组件实例对象
+         注意点：父组件获取子组件数据的前提，是子组件要抛出数据。defineExpose
 <template>
   <div class="child">
     <div>父页面8</div>
@@ -2330,6 +2331,150 @@ parent.Child()   //调用父组件的方法
 
 </script>
 ```
+
+#### 使用vue3提供的通讯api实现父级间通讯
+
+https://www.jb51.net/article/283742.htm#_label1
+
+#### 一、父 传 子defineProps
+
+- [一、父传子 defineProps](https://www.jb51.net/article/283742.htm#_label1)
+
+  父组件：通过v-bind绑定数值
+
+```vue
+<template>
+  <div class="fa">
+    <div>我是父组件</div>
+    <Son :fatherMessage="fatherMessage"></Son>
+  </div>
+</template>
+<script setup lang="ts">
+import Son from './Son.vue'
+import {ref} from "vue";
+const fatherMessage = ref("我是父组件传过来的值")
+</script>
+```
+
+子组件：defineProps定义接收参数
+
+```vue
+<template>
+    <div>child--- {{ fatherNum }}</div>
+</template>
+<script setup>
+defineProps(['fatherNum'])
+
+</script>
+```
+
+#### 二、子传父 defineEmits
+
+孩子组件，要传递数据给父组件；
+
+首先，孩子组件自己注册一个自定义事件，然后自己主动点击触发，触发同时可以传参；
+
+然后，父组件，对应的 @子组件注册的方法 = 父组件定义一个方法， 保存参数到自己的变量中。 使用变量。
+
+子组件
+
+```vue
+<template>
+    <div>child--- {{ fatherNum }}</div>
+
+    <button @click="transValue" style="margin: 5px">传值给父组件</button>
+</template>
+<script setup>
+import {ref} from "vue";
+ 
+ // 定义所要传给父组件的值
+ const value = ref("我是子组件传给父组件的值")
+  
+ // 使用defineEmits注册一个自定义事件
+ const emit = defineEmits(["getValue"])
+  
+ // 点击事件触发emit，去调用我们注册的自定义事件getValue,并传递value参数至父组件
+ const transValue = () => {
+   emit('getValue', value.value)
+ }
+
+</script>
+```
+
+父组件
+
+```vue
+<template>
+    <div>
+  {{ fatherVal }}
+   <child ref="child1" @getValue="getSonValue"></child>     
+   </div>
+</template>
+<script setup>
+import child from "./child.vue"
+
+let fatherVal = ref("")
+function getSonValue(data){
+    fatherVal.value = data
+}
+</script>
+```
+
+#### 三、子组件暴露属性给父组件 defineExpose
+
+子组件，主动暴漏属性和方法
+
+```vue
+<template>
+    <div>child--- {{ fatherNum }}</div>
+
+    <!-- <button @click="transValue" style="margin: 5px">传值给父组件</button> -->
+</template>
+<script setup>
+import {ref, defineExpose} from "vue";
+ 
+ // 暴露给父组件的值
+ const toFatherValue = ref("我是要暴露给父组件的值")
+  
+ // 暴露给父组件的方法
+ const toFatherMethod = () => {
+   console.log("我是要暴露给父组件的方法")
+ }
+ // 暴露方法和属性给父组件
+ defineExpose({toFatherMethod, toFatherValue})
+
+</script>
+```
+
+父组件 通过ref，获取孩子的属性和方法
+
+```vue
+<template>
+    <div>
+     <span @click="fatherMethods">获取child数据</span>
+   <child ref="childRef"></child>     
+   </div>
+</template>
+<script setup>
+import child from "./child.vue"
+
+let childRef = ref("")
+
+function fatherMethods(data){
+    // console.log(childRef.value.toFatherValue); //属性
+    console.log(childRef.value.toFatherMethod()); //方法
+
+}
+</script>
+```
+
+
+
+
+
+
+
+
 
 
 
