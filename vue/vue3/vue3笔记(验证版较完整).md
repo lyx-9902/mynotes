@@ -1959,6 +1959,12 @@ function send(){
 
 ### 6.2 自定义事件 （没有测试成功）emit()
 
+（没成功原因是：
+
+ <Child :car="car" @send-toy="getToy"></Child> ，方法用 @+方法名， 属性用 冒号， 变量：变量
+
+ ）
+
 父组件
 
 ```vue
@@ -1969,7 +1975,7 @@ function send(){
     {{toy  }}
 
     <br>
-     <Child :car="car" :send-toy="getToy"></Child>   
+     <Child :car="car" @send-toy="getToy"></Child>   
   </div>
 </template>
 
@@ -2472,6 +2478,119 @@ function fatherMethods(data){
 
 https://blog.csdn.net/qq_27487739/article/details/130952551
 
+当[子组件](https://so.csdn.net/so/search?q=子组件&spm=1001.2101.3001.7020)需要将一个值传递给父组件，并且希望父组件能够更新这个值时，并且自己可以使用到最新的值。可以使用`emit('update:modelValue', newValue)`。
+
+实现案例如下:
+
+**4.1 子组件数据，驱动父组件显示需要满足如下条件：**
+
+ 子组件
+
+```
+1. 定义更新事件
+const emit = defineEmits(['update:modelValue', 'update:age'])
+2. 组件内，执行emit,向父组件触发。 
+ emit('update:age', Number(msg))
+```
+
+父组件配置
+
+```
+组件内使用 v-model:age="age2" 方式，绑定数据。age2为父组件定义的响应式变量。
+<TestCom v-model:age="age" ></TestCom>
+{{age2}} 显示数据
+```
+
+**4.2父组件修改数据，子组件同步更新，需要满足如下逻辑线：**
+
+
+
+```vue
+ 1. 子组件 定义props，接受父组件参数。
+const props = defineProps({
+    age: {
+      type: Number,
+      default: 28
+    }
+  })
+2. watch，监听props中的指定变量变化，并保存到组件内响应式变量。供使用显示。
+  watch(() => props.age, () => { message_age.value = props.age })
+```
+
+**4.3双向数据 完整案例如下：**
+
+父组件
+
+```vue
+<template>
+  <TestCom v-model="name" v-model:age="age" ></TestCom>
+  <h1>以下父组件</h1>
+  <button @click="name+='-'">父组件跟新数据</button>
+  <h1>名字: {{ name }}</h1>
+  <h1>年龄: {{ age }}</h1>
+
+</template>
+ 
+<script setup>
+  import { ref, reactive } from 'vue'
+  import TestCom from './child.vue'
+  const name = ref(null);
+  const age = ref(null);
+
+</script>
+```
+
+子组件
+
+```vue
+<template>
+    <input v-model="message_name" placeholder="输入姓名" @input="changeName(message_name)" />
+    <input v-model="message_age" placeholder="输入年龄" @input="changeAge(message_age)" />
+    <button @click="change">手动修改</button>
+  </template>
+  <script setup>
+  import { ref, watch } from 'vue';
+  // 此处引入
+  const emit = defineEmits(['update:modelValue', 'update:age'])
+  const props = defineProps({
+    // 父组件 v-model 没有指定参数名，则默认是 modelValue
+    modelValue: {
+      type: String,
+      default: 'lqy'
+    },
+    age: {
+      type: Number,
+      default: 28
+    }
+  })
+   
+  let message_name = ref(null)
+  let message_age = ref(null)
+  // PS: 具体业务逻辑需要在 props.modelValue 变化时执行其他操作，你可能需要重新添加监听代码。但根据你提供的信息，删除这行代码并没有影响组件的功能。
+  watch(() => props.modelValue, () => { message_name.value = props.modelValue })
+  watch(() => props.age, () => { message_age.value = props.age })
+   
+  let num = 10;
+  const change = () => {
+    num++;
+    emit('update:age', num)
+  }
+
+  // 数据双向绑定
+  const changeName = (msg) => {
+    emit('update:modelValue', msg)
+  }
+  const changeAge = (msg) => {
+ 
+    emit('update:age', Number(msg))
+  }
+  </script>
+```
+
+
+
+
+
 
 
 
@@ -2688,7 +2807,7 @@ defineProps(["title"])
 
     <Child>
 
-      <template v-slot="{ youxi }"> 第二种区参方式
+      <template v-slot="{ youxi }"> 第二种取参方式
         <h1 v-for="item in youxi">{{ item.name }}</h1>
       </template>
     </Child>
