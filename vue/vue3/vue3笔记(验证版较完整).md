@@ -2468,9 +2468,9 @@ function fatherMethods(data){
 </script>
 ```
 
+#### 四 ：使用 `emit` 和 `update:` 来实现父子组件之间的数据传递。
 
-
-
+https://blog.csdn.net/qq_27487739/article/details/130952551
 
 
 
