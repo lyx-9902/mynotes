@@ -4057,9 +4057,19 @@ let list23 = reactive<PersonArray>([
 
 
 
+#### 使用elementPlus碰到的问题
 
+1 element-plus 关于 ＜el-radio-group＞单选框一选全选问题
 
+https://blog.csdn.net/m0_59893114/article/details/136527158
 
+```
+ 低于2.6.0 版本库需需要加上lable 就可以解决了
+ <el-radio-group v-model="form.enabledState">
+                            <el-radio value="0" label="0">禁用</el-radio>
+                            <el-radio value="1" label="1">启动</el-radio>
+   </el-radio-group>
+```
 
 
 
