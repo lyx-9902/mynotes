@@ -540,6 +540,25 @@ function changeFullName() {
 </script>
 ```
 
+### computed计算属性传参
+
+```vue
+<div v-for="item in list">
+    <div v-if='isShow(item)'>是否显示</div>
+</div>
+ 
+<script>
+import {computed} from 'vue'
+const currentId=ref(null)
+ 
+const isShow=computed(()=>(item:any)=>{ //计算属性传递参数
+    return currentId=== item.id
+})
+</script>
+```
+
+
+
 ###  3.6 [watch]
 
 作用 : 监视数据的变化 (和 Vue2 中的 watch 作用一致)
