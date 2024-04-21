@@ -3607,7 +3607,7 @@ const vFocus = {
   mounted: (el) => el.focus()
 }
 </script>
-
+注意点： v+驼峰 = 自动识别为自定义指令
 ```
 
 注：在`<script setup>` 中，任何以 `v` 开头的驼峰式命名的变量都可以被用作一个自定义指令，`vFocus` 即可以在模板中以 `v-focus` 的形式使用
