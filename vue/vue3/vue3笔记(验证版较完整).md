@@ -1477,6 +1477,10 @@ console.log(route.params);  //{ name: "tom" }
 
 
 
+
+
+
+
 ##### props配置
 
 作用:让路由组件更方便的收到参数(可以将路由参数作为props传给组件)
@@ -1560,6 +1564,41 @@ path:"/",
 redirect:"/home"
 }
 ```
+
+#### history state路由模式传参
+
+作用： vue3 路由传参，参数隐藏不在地址栏显示（history），
+
+**点击按钮进行页面跳转**
+
+```
+const SkipPage = (row) => {
+    let obj = JSON.stringify(row)
+    router.push({
+        path: '/supplyDesc',
+        state: { obj }
+    })
+}
+
+```
+
+**在跳转的页面接收参数**
+
+```
+onMounted(()=>{
+  console.log(JSON.parse(history.state.obj))
+})
+
+```
+
+基于 HTML5 History API 的传参原理
+发起页面跳转： 在 handleClickc 函数中，通过 router.push 进行页面跳转。其中，state 是 HTML5 History API 提供的一个参数，允许你在页面之间传递数据，但不会在地址栏中显示。state 属性的值应该是一个对象，用来传递参数。
+接收参数： 在目标页面中，你可以通过 history.state 访问到上一个页面传递的参数。history.state 对象包含在 HTML5 History API 中，它提供了对浏览器历史记录条目的访问。在你的代码中，在组件的 onMounted 钩子中使用 history.state.obj 访问了传递过来的参数对象。
+注意事项
+使用 router.push 中的 state 参数，你可以传递任意类型的数据对象，但是要注意浏览器的兼容性问题。在一些较旧的浏览器中可能不支持这些新的 HTML5 History API。
+由于 history.state 在某些情况下可能会受到浏览器或路由器的限制（例如在刷新页面后可能会丢失状态），对于复杂的应用场景，可能需要考虑其他状态管理方式，比如 Vuex。
+
+原文链接：https://blog.csdn.net/2301_76282668/article/details/135815801
 
 
 
