@@ -28,10 +28,17 @@ import { px2rem } from 'vite-plugin-px2rem';
 export default defineConfig({
 	plugins: [
 		px2rem({
-			width: 750,
+			width: 1920,    //pc一般的设计稿尺寸
 			rootFontSize: 16,
 		}),
 	],
 });
 ```
 
+
+
+2.7.2
+
+
+
+$ npm config get registry
