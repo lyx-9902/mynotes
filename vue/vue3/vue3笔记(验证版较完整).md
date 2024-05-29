@@ -4133,3 +4133,6 @@ https://blog.csdn.net/m0_59893114/article/details/136527158
 
 
 
+# 字符串填充-padStart 、padEnd
+
+https://blog.csdn.net/weixin_43845090/article/details/132333582
