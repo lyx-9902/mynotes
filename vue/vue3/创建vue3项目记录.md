@@ -107,5 +107,34 @@ console.log(' VITE_MD: ',  import.meta.env.VITE_MD);
 
 
 
+## 项目中使用elementPlus记录
+
+[JavaScript验证密码合法性，必须包含数字字母特殊符号（用正则表达式）](javascript:void(0);)
+
+/^(?=.*\d)(?=.*[a-zA-Z])(?=.*[@*#$%^&+=~!?]).{8,}$/*
 
 
+
+该正则表达式的意思是：
+
+- `^` 表示字符串的开头
+- `(?=.*\d)` 表示后面必须包含至少一个数字
+- `(?=.*[a-zA-Z])` 表示后面必须包含至少一个字母
+- `(?=.*[@#$%^&+=~!?])` 表示后面必须包含至少一个特殊符号（这里列出了一些常见的特殊符号）
+- `.{8,}` 表示后面必须至少有 8 个字符（这里可以根据需要修改）
+
+完整的 JavaScript 代码如下：
+
+```
+
+function validatePassword(password) {
+  var regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[@#$%^&+=~!?]).{8,}$/;
+  return regex.test(password);
+}
+// 测试代码
+console.log(validatePassword("abc123$%")); // true
+console.log(validatePassword("abcABC123")); // false
+console.log(validatePassword("P@ssword")); // false
+```
+
+注意：该正则表达式只能验证密码是否符合要求，并不能保证密码的安全性。建议在实际应用中采取更多的措施来保护密码安全。
