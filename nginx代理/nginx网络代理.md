@@ -89,3 +89,167 @@ win服务器演示：
 nginx -t
 ```
 
+
+
+案例：
+
+```java
+
+#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+ 
+    server {
+             listen       8007;
+             server_name  192.168.112.3;
+
+             location / {
+                   root D:\WebProject\erligang;
+				   try_files $uri $uri/ /index.html;
+                   index index.html index.htm;
+             }
+			
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+
+
+	 server {
+             listen       8018;
+             server_name  192.168.112.3;
+			 charset utf-8;
+			 
+             location / {
+                   root D:\WebProject\shanghai-pipe;
+				   try_files $uri $uri/ /index.html;
+                   index index.html index.htm;
+             }
+			 
+			 location /prod-api/ {
+				proxy_set_header Host $http_host;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header REMOTE-HOST $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_pass http://192.168.112.2:8080/;
+            }
+			
+			  location ~ /RPC2|RPC2_Login|RPC_Loadfile/ {
+            proxy_pass http://$http_self_targetip;
+            break;
+        }	
+        
+        location ^~ /web_caps/ {
+            proxy_pass http://$http_self_targetip;
+            break;
+        }	
+
+
+			 
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+	
+		server {
+             listen       8021;
+             server_name  192.168.112.3;
+			 charset utf-8;
+			 
+             location / {
+                   root D:/WebProject/three-lab;
+				   try_files $uri $uri/ /index.html;
+                   index index.html index.htm;
+             }
+			 
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443;
+    #    server_name  localhost;
+
+    #    ssl                  on;
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_timeout  5m;
+
+    #    ssl_protocols  SSLv2 SSLv3 TLSv1;
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers   on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
