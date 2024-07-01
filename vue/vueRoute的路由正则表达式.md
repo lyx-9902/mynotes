@@ -43,3 +43,25 @@ path: '/user/:id?'
 这可以匹配可选参数 id，也可以匹配不带参数的路由。
 注意，在Vue Router中使用正则表达式时，需要将正则表达式包含在圆括号中，并在圆括号之前使用一个冒号来指定参数名称。
 另外，使用的正则表达式可能会影响路由匹配的性能。因此，应该尽量避免使用非常复杂的正则表达式。
+
+
+
+## 项目案例
+
+```js
+  {
+    path: "/system/dict-data",
+    component: Layout,
+    hidden: true,
+    permissions: ["system:dict:list"],
+    children: [
+      {
+        path: "index/:dictId(\\d+)",
+        component: () => import("@/views/system/dict/data"),
+        name: "Data",
+        meta: { title: "字典数据", activeMenu: "/system/dict" },
+      },
+    ],
+  },
+```
+
