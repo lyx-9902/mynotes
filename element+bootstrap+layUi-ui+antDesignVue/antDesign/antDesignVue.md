@@ -130,5 +130,77 @@ const onSelectChange = selectedRowKeys => {
 
 
 
+## 循环表单验证
+
+
+
+案例
+
+```vue
+        <!-- 应用场景 -->
+        <div class="advantage item">
+          <p class="itemTitle"> <img src="/img/product/scene.png" alt=""> <span>应用场景</span></p>
+          <!-- 循环区域   -->
+          <div class="itemBody">
+            <div class="loop">
+              <div class="loop_item" v-for="(item, index) in formState.scenarioDetailList" :key="index">
+                <div class="loop_head">
+                  <span class="circle"><span>{{ index + 1 }}</span></span>
+                  <span class="del" @click="addUseFormItem(index)" v-if="index !== 0">
+                    <DeleteOutlined :style="{ fontSize: '16px', color: '#808BB5' }" /> 删除
+                  </span>
+                </div>
+                <div class="loop_body">
+                  <a-row>
+                    <a-col :span="24">
+                      <a-form-item label="概述" :name="['scenarioDetailList', index, 'scenarioOverview']"  《----关键点
+                        :rules="rules.scenarioOverview">
+                        <a-input v-model:value="item.scenarioOverview" placeholder="请输入概述" />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="24">
+                      <a-form-item label="详情" :name="['scenarioDetailList', index, 'scenarioDetail']"
+                        :rules="rules.scenarioDetail">
+                        <a-textarea v-model:value="item.scenarioDetail" placeholder="请输入详情" :rows="4" />
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                </div>
+              </div>
+              <div class="loop_addbutton">
+                <span @click="addUseFormItem(null)">
+                  <PlusOutlined />&nbsp; 添加表单
+                </span>
+              </div>
+
+            </div>
+          </div>
+```
+
+## a-table的单选  自动选中
+
+
+
+```vue
+   <a-table :columns="repairPersonColumns" :data-source="repairPersonList"
+        :style="{ width: '100%', marginTop: '20px' }" :pagination="queryParams" @change="changeTable" rowKey="userId"
+        :scroll="{ y: tableMaxHeight }"
+        :rowSelection="{ 
+                       selectedRowKeys: selectedRowKeysArray,   《----关键点
+                       onChange: onSelectChange,
+                       type: 'radio' 
+                       }"
+```
+
+selectedRowKeysArray： 绑定的是单选或多选的id，更改这个数据，表格显示对应的选中效果。
+
+onSelectChange 是点击单选或多选时，当前行id的集合。 赋值到selectedRowKeys属性上，即实现选中。
+
+
+
+
+
+
+
 
 
