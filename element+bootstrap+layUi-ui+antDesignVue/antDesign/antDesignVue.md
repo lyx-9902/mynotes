@@ -128,6 +128,85 @@ const onSelectChange = selectedRowKeys => {
 </script>
 ```
 
+## a-table 多选框 功能配置
+
+关键点：
+
+```
+1.  :rowSelection="{ 
+selectedRowKeys: tableSelectRowIds,  
+type: 'checkbox' ,
+onSelect:onSelect,
+onSelectAll:onSelectAll
+} //多选属性
+2. rowKey="id" 指定数据中 唯一键值 (根据实际列表数据，如下表的deviceId)
+3. tableData 中提供对应的id属性值
+
+拿值：多选有单个操作和一键全选，onSelect  onSelectAll两个方法获取想要的数据。
+```
+
+示例：
+
+```vue
+<a-table 
+         :columns="columns" 
+         :data-source="tableData" 
+         :style="{ width: '100%' }"                                 
+         :pagination="queryParams"   
+         rowKey="deviceId" 
+         :scroll="{ y: tableMaxHeight }"  
+         :rowSelection="{ selectedRowKeys: tableSelectRowIds,  type: 'checkbox'      ,onSelect:onSelect,onSelectAll:onSelectAll}">
+        <template #bodyCell="{ column, text, record, index }">
+```
+
+js部分
+
+```javascript
+const tableSelectRowIds = ref([])
+const tableSelectRows = ref([])
+/**
+   * @description  table的多选框回调事件- 单个点击事件
+   * @param {array}  record 表示当前行obj
+   * @param {Boolean} selected:true表示选中操作  false 表示取消操作
+   */
+   function onSelect(record, selected, selectedRows, nativeEvent) {
+    console.log('onSelect', record.deviceId, selected, selectedRows, nativeEvent)
+    if (selected) {  //选中操作 保存id row
+        tableSelectRowIds.value.push(record.deviceId);
+        tableSelectRows.value.push(record);
+    } else {//取消操作 删除id row
+        tableSelectRowIds.value = tableSelectRowIds.value.filter( i=> i !== record.deviceId);
+        tableSelectRows.value = tableSelectRows.value.filter( i=> i.deviceId !== record.deviceId);
+    }
+}
+/**selected, selectedRows, changeRows
+   * @description  table的多选框回调事件- 全选的chagne事件  
+   * @param {array}  changeRows 
+   * @param {array}  selectedRows 
+   * @param {Boolean} selected: true表示全选中操作  false 表示全取消操作
+   */
+function onSelectAll(selected, selectedRows, changeRows){
+    //全选操作时 注意查重
+    if (selected) {
+            selectedRows.forEach(i => {
+                if (!!i&&!tableSelectRowIds.value.includes(i.deviceId)) {//不包含的添加
+                    tableSelectRowIds.value.push(i.deviceId);
+                    tableSelectRows.value.push(i);
+                }
+
+            }) 
+    } else {//取消操作  时changeRows中有数据
+        changeRows.forEach( item =>{
+            console.log(item);
+            tableSelectRowIds.value = tableSelectRowIds.value.filter(i => i!== item.deviceId);
+            tableSelectRows.value = tableSelectRows.value.filter(i => i.deviceId!== item.deviceId);
+
+        })
+
+    }
+}
+```
+
 
 
 ## 循环表单验证
