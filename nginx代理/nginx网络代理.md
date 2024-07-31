@@ -1,8 +1,41 @@
 # nginx代理
 
+实测记录：
+
+本地部署时，关于root路径出现问题，无法访问到资源。
+
+解决： win系统下盘符内 ，/ 正斜杠        \反斜杠 路径不行。
+
+```
+        location / {
+           # root  html;   <---原来
+              root  "F:/testdemo/dist";   <---我的本地电脑
+            index  index.html index.htm;
+        }
+       location /prod-api/ {
+				proxy_set_header Host $http_host;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header REMOTE-HOST $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_pass http://192.168.112.4:8888/;
+            }
+```
+
+
+
+
+
+
+
+
+
+******************************************************************
+
 官网下载
 
 https://nginx.org/
+
+https://nginx.org/en/download.html  下载页面
 
 ### 一，Nginx是什么，适用场景？
 
@@ -241,15 +274,124 @@ http {
 
 
 
+## 实测指令 
+
+### 1.下载
+
+稳定版本 以nginx/Windows-1.18.0为例
+
+### 2 打开命令工具
+
+进入nginx所在目录，输入cmd 打开命令工具。
+
+### 3.开启服务：
+
+(1)直接双击nginx.exe，双击后一个黑色的弹窗一闪而过
+（注意如果点击多次，会启动很多个，导致使用nginx -s stop无法关闭完全）
+
+输入命令 **nginx.exe** 或者 **start nginx** ，回车即可
+
+### 4.检查端口是否被占用
+
+```
+netstat -ano | findstr 0.0.0.0:80
+```
+
+### 5.检查nginx是否启动成功
+
+直接在浏览器地址栏输入网址 http://localhost:80，回车，出现以下页面说明启动成功
+
+### 6.刷新配置
+
+当我们修改了nginx的配置文件nginx.conf 时，
+不需要关闭nginx后重新启动nginx，只需要执行命令 **nginx -s reload** 即可让改动生效
+
+nginx.exe -s reload 重载nginx服务，当你改变了nginx配置信息并需要重新载入这些配置时可以使用此命令重载nginx
+
+注意点：80端口是nginx的默认端口，也就是说，在没有加端口时，默认80.
+
+  http://localhost/haochi   等同于  http://localhost:80/haochi
+
+### 7.关闭nginx
+
+如果使用cmd命令窗口启动nginx，关闭cmd窗口是不能结束nginx进程的，可使用两种方法关闭nginx
+
+(1)输入nginx命令  **nginx -s stop** (快速停止nginx) 或 nginx -s quit(完整有序的停止nginx)
+
+nginx.exe -s stop 关闭nginx服务，快速停止nginx，可能并不保存相关信息
+
+nginx.exe -s quit 关闭nginx服务，完整有序的停止nginx，并保存相关信息
+
+(2)使用taskkill taskkill /f /t /im nginx.exe
+
+### 8.nginx命令参数v与V的区别
+
+nginx -v命令只是简单显示nginx的版本信息(nginx version)
+
+nginx -V不但显示nginx的版本信息，而且还显示nginx的配置参数信息。
 
 
 
+### .bat快捷插件
 
+![](https://i-blog.csdnimg.cn/blog_migrate/feceee8b859b3d905e1dab0c92846120.png)
 
+与nginx脚本搭配使用的神器， -->RunHiddenConsole 
 
+[详见](https://blog.csdn.net/gitblog_00093/article/details/139850656)，主要功能是，避免控制台频繁弹出，保持界面清爽。
 
+准确的叫法为：批处理文件
 
+在DOS,OS/2和[微软](https://baike.baidu.com/item/微软/124767?fromModule=lemma_inlink)Windows操作系统中，[批处理文件](https://baike.baidu.com/item/批处理文件/5363369?fromModule=lemma_inlink)(batch file)是包含一系列命令的文本文件，由命令[解释器](https://baike.baidu.com/item/解释器/10418965?fromModule=lemma_inlink)[解释执行](https://baike.baidu.com/item/解释执行/8081777?fromModule=lemma_inlink)。批处理文件是一种简单的程序，可以通过条件语句(if)和流程控制语句(goto)来控制命令运行的流程，在[批处理](https://baike.baidu.com/item/批处理/1448600?fromModule=lemma_inlink)中也可以使用循环语句(for)来循环执行一条命令 。
 
+#### 如何只做一个批处理文件执行任务
+
+以下是一个示例的批处理文件（假设Nginx已经安装在你的电脑上，并且其可执行文件位于 `C:\nginx\nginx.exe`）：
+
+```
+@echo off
+echo Starting Nginx...
+C:\nginx\nginx.exe
+echo Nginx started successfully.
+pause
+```
+
+1. 打开文本编辑器（如记事本）。
+2. 将上述代码复制并粘贴到文本编辑器中。
+3. 保存文件，确保文件名以 `.bat` 结尾，例如 `start_nginx.bat`。
+4. 双击该批处理文件，或者从命令提示符中运行它，来启动Nginx。
+
+注意：
+
+- 你需要确保Nginx的安装路径是正确的。如果Nginx安装在不同的位置，你需要相应地修改批处理文件中的路径。
+
+- `pause` 命令会暂停脚本的执行，并显示一个消息，等待用户按任意键继续。这可以让你在命令提示符窗口中看到Nginx的启动消息。如果你不希望这样做，可以删除 `echo Nginx started successfully.` 和 `pause` 这两行。
+
+- 如果你想要停止Nginx，你可以使用类似的批处理文件，但使用 `nginx.exe -s stop` 命令。
+
+  
+
+## nginx的root配置
+
+https://blog.51cto.com/u_16213592/11128152
+
+Win10环境中Nginx配置文件中server里root该配置什么路径 nginx的root配置
+
+root指令
+ro0t指令在Nginx配置中非常常见，用于设置服务器中资源的根目录。这意味着Nginx会从这个指定的目录中查找并服务文件。
+
+root与alias的主要区别
+路径拼接方式:使用root时，location块中指定的URI将会直接拼接到r0o路径后面，而alias则会将location中匹配的部分路径替换为alias指定的路径
+适用场景:root适用于网站的广泛区域，常在server或location块中定义，alias适用于单独改变特定location的路径，适合更细粒度的路径控制,
+
+注意:
+1.使用alias时，目录名后面一定要加"/"
+2.alias在使用正则匹配时，必须捕捉要匹配的内容并在指定的内容处使用3.alias只能位于location块中。(root可以不放在location中)
+
+使用场景
+·使用root:当你想为整个服务器或者特定位置提供一个统一的根目录时，使用root是最简单直接的方法。
+。使用alias:当你需要对服务器上的特定资源进行映射，而这部分资源又不在当前的根目录中时，alias是不可或缺的。例如，如果某些动态生成的文件存放在不同于静
+态文件的目录，就可以通过alias来进行特殊处理。
 
 
 
