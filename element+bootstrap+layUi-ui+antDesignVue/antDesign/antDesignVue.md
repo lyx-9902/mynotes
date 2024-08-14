@@ -275,11 +275,37 @@ selectedRowKeysArray： 绑定的是单选或多选的id，更改这个数据，
 
 onSelectChange 是点击单选或多选时，当前行id的集合。 赋值到selectedRowKeys属性上，即实现选中。
 
+# Ant Design Vue的table组件高度自适应问题
 
+[Ant](https://so.csdn.net/so/search?q=Ant&spm=1001.2101.3001.7020) Design Vue的table组件高度无法自适应，高度强制定死的话针对窗口缩放又不友好，最终尝试的解决方案只能通过监听浏览器窗口变化实现自适应
 
+**1. 设定组件滚动区域的宽和高参数**
 
+```
+//此处减去的430是其他固定元素块的总高度
+const tableHeight = ref({ x: '100%', y: document.body.clientHeight - 430 });
 
+```
 
+**2. 在生命周期onMounted里面监听浏览器窗口变化**
 
+```
+onMounted(() => {
+    //监听浏览器窗口变化
+    window.onresize = () => {
+      return (() => {
+        tableHeight.value.y = document.body.clientHeight - 430;
+      })();
+    };
+  });
 
+```
 
+**3. 参数带入组件**
+
+```
+<a-table :scroll="tableHeight"> </a-table>
+
+```
+
+[参考](https://blog.csdn.net/zhouoxinxin/article/details/126180738?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-126180738-blog-138603175.235^v43^control&spm=1001.2101.3001.4242.1&utm_relevant_index=1)
