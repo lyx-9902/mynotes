@@ -1,6 +1,6 @@
 # 项目常用css
 
-## transition animation区别
+## 1. transition animation区别
 
 **CSS中的`transition`和`animation`属性主要用于创建动态效果，‌但它们在实现方式、‌应用场景、‌性能以及与事件的交互方面存在显著区别。‌**
 
@@ -19,7 +19,7 @@
   transition: 0.2s linear;
 ```
 
-###  animation动画的使用：
+###  2. animation动画的使用：
 
 特点： 关闭和打开的两种状态 都有关键帧样式代码。 一下效果是：大屏页面的leftPage的移动。
 
@@ -52,4 +52,23 @@
         animation: pageRClose 0.5s forwards;
     }
 ```
+
+## 3. url() no-repeat 50%/ cover 中的50%/含义
+
+```
+background-image: url('image.jpg');  
+background-repeat: no-repeat;  
+background-position: 50% 50%; /* 或者简单地使用 center，因为 center 默认为水平和垂直都居中 */  
+background-size: cover;
+```
+
+或者，如果你想要使用`background`属性的简写形式，你可以这样做：
+
+```
+background: url('image.jpg') no-repeat center / cover;
+```
+
+注意，在简写形式中，`/`前面是`background-position`（在这里是`center`，等同于`50% 50%`），而`/`后面是`background-size`（这里是`cover`）。这种简写形式要求`background-position`和`background-size`之间用`/`分隔，但这并不直接等同于`50% / cover`的误解写法。
+
+
 
