@@ -1,6 +1,7 @@
 # 在 Vue 3 中实现 Word 和 PDF 文件的预览
 
-1. Word 文件预览
+# Word 文件预览
+
 对于 Word 文件预览，可以使用 vue-office 或者 docx-preview 这样的第三方库。这里以 docx-preview 为例：
 
 安装依赖
@@ -80,7 +81,7 @@ function review(){
 
 npm 安装插件
 
-
+npm install @vue-office/excel vue-demi@0.14.6
 
 ```vue
   <vue-office-excel  
@@ -96,4 +97,12 @@ npm 安装插件
     //引入相关样式
     import '@vue-office/excel/lib/index.css'
 ```
+
+## pdf
+
+npm install @vue-office/pdf
+
+
+
+
 

@@ -4078,7 +4078,28 @@ router ： 是否使用 vue-router 的模式，启用该模式会
 <el-main>Main</el-main>
 </el-container>
 
+## 2 el-form
 
+form中的 item, #label插槽的自定义
+
+```
+       <el-form ref="roleRef" :model="form" :rules="rules" label-width="100px">
+           
+           <el-form-item prop="roleKey">
+           
+               <template #label>
+                  <span>
+                     <el-tooltip content="控制器中定义的权限字符，如：@SaCheckRole('admin')" placement="top">
+                        <el-icon><question-filled /></el-icon>
+                     </el-tooltip>
+                     权限字符
+                  </span>
+               </template>
+               
+               <el-input v-model="form.roleKey" placeholder="请输入权限字符" />
+            </el-form-item>
+            
+```
 
 
 
