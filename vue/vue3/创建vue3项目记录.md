@@ -2,6 +2,37 @@
 
 ## vue3创建项目
 
+## 补充：
+
+**vue中的特殊标签  component** 
+
+它允许你动态地绑定到一个组件。这意味着你可以根据某些条件或数据动态地渲染不同的组件。
+
+`<component>` 元素有一个特殊的 `is` 属性，该属性用于指定要渲染的组件。
+
+```
+
+<template>  
+  <div>  
+    <component :is="setComponentObject"></component>  
+  </div>  
+</template>
+
+
+import ComponentA from './ComponentA.vue';  
+import ComponentB from './ComponentB.vue'; 
+setComponentObject可以是组件变量， 也可以是普通的标签。例如 div  a 。为div是就是div标签，也可以是其他的HTML标签,比如input，select，img等等都可以的
+
+```
+
+
+
+
+
+
+
+
+
 1.vue3官网 [地址](https://cn.vuejs.org/guide/quick-start.html#creating-a-vue-application)
 
 使用vite快速创建项目 
@@ -138,3 +169,106 @@ console.log(validatePassword("P@ssword")); // false
 ```
 
 注意：该正则表达式只能验证密码是否符合要求，并不能保证密码的安全性。建议在实际应用中采取更多的措施来保护密码安全。
+
+
+
+## 使用vite + antUI+ aoios +mock 创建项目
+
+### 🍊项目使用 mock数据
+
+引入axios插件
+
+```
+npm install mockjs
+    使用axios请求
+npm install axios
+```
+
+ 注意点：src下创建mock目录 根目录下实测不行。
+
+mock下创建 index.js文件
+
+```js
+//导入Mock
+import Mock from 'mockjs'
+
+// 使用官方的数据符号
+Mock.mock('/mock/data/customerName', 'get', {
+    "data|10": [{
+        id: '@id', //随机id
+        name: '@cname', //随机名称 @name英文名称 @cname中文名称
+        phone: /^1[34578]\d{9}$/, //随机电话号码
+        'age|11-99': 1, //年龄  属性名(age)、生成规则(rule)、属性值(value) 'age|rule': value
+        address: '@county(true)', //随机地址 @county(true)省市县  @county(false)||@county()县||区||-
+        email: '@email', //随机邮箱
+        isMale: '@boolean', //随机性别
+        createTime: '@datetime', //创建时间 可以自定义格式 @datetime(yyyy-MM-dd hh:mm:ss)
+        paragraph: '@cparagraph',
+    }]
+})
+
+第二种 返回自定义的数据
+Mock.mock('/mock/login', 'post', ()=>{
+   return {
+    "code": 200,
+    "msg": "操作成功",
+    "data": {
+        "token": "eyJ0eXAiOiJKV1Q"
+    }
+   }
+})
+```
+
+main.js中引入
+
+```
+import "@/mock/index.js"//引入mock接口
+```
+
+
+
+组件中测试使用
+
+```js
+import axios from 'axios';
+axios.get("/mock/data/customerName").then((res)=>{
+  console.log(res);  //成功返回数据
+})
+
+接下来：可以自己去封装request,使用拦截器做一些事情。
+```
+
+### 🍊pinia的数据固化
+
+  安装使用pinia后，由于数据都是运行时产生，所以刷新时，会丢失，恢复到出示状态。
+
+   第一种： 使用localstory 缓存，或使用插件。
+
+   第二种： 请求接口。  可以在router.beforeEach,判断用户信息有没有恢复默认状态，有的话就重新请求一下接口。 并更新菜单数据。
+
+### 🍊NProgress进度条
+
+```
+npm install nprogress
+```
+
+  使用
+
+```
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css'; // 这是 NProgress 的默认样式
+
+// 启动进度条
+NProgress.start();
+
+// 增加进度条（0.1 到 1.0 之间的任何值）
+NProgress.set(0.4); 
+
+// 随机增加进度条（这里使用了内部算法来确定增加的量）
+NProgress.inc(); 
+
+// 完成进度条
+NProgress.done();
+
+```
+
