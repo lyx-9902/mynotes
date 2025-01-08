@@ -6,7 +6,7 @@ Full name : Tom
 
 emaill    :luyxmsg@outlook.com
 
-username:  istom  （用户名）
+username:  istom  （用户名）注意不要有空格
 
 pas: 123456@Gljcxx   （密码）
 
