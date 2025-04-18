@@ -16,6 +16,10 @@ https://www.three3d.cn/docs/index.html#manual/zh/introduction/Creating-a-scene
 
 https://www.three3d.cn/threejs/01-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/01-%E5%89%8D%E7%AB%AF3D%E5%8F%AF%E8%A7%86%E5%8C%96Three.js%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF.html
 
+bibi相关课程
+
+https://www.bilibili.com/video/BV1Gg411X7FY?spm_id_from=333.788.videopod.episodes&vd_source=08704ab849ba956e9d7acbdbd55b0991&p=21
+
 ## 简介
 
 Three.Js是基于WebGL的JavaScript开源框架，简言之，就是能够实现3 D效果的JS库。
@@ -827,6 +831,69 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';  //引入加�
 屏幕px坐标 转化鼠标向量的x,y值。 横向x ,纵轴y .
 
 <img src=".\img\6.png" style="zoom:50%;" />
+
+
+
+关键代码
+
+```
+// 创建场景
+const scene = new THREE.Scene();
+// 创建相机
+const camera = new THREE.PerspectiveCamera(
+    45, //视角
+    window.innerWidth / window.innerHeight, //宽高比
+    0.1, //近平面
+    1000,//原平面
+);
+
+// 创建射线
+const raycaster = new THREE.Raycaster();
+//创建鼠标向量
+const mouse = new THREE.Vector2();
+
+window.addEventListener('click', (e) => {
+  // 设置鼠标向量xy坐标
+  e.preventDefault();  // 阻止默认表单提交行为
+    const mouse = {
+      x: (e.clientX/window.innerWidth) * 2 - 1,      屏幕坐标转换世界坐标
+      y: -((e.clientY/window.innerHeight) * 2 - 1),
+    };
+    //通过摄像机和鼠标位置跟新射线
+    raycaster.setFromCamera(mouse, camera);
+    //计算物体和射线的焦点
+    // const intersects = raycaster.intersectObjects(scene.children); // 监测所有物体，包含坐标轴。
+    const intersects = raycaster.intersectObjects([cube,cube2]); // 也可以指定监测的物体
+    console.log(intersects);// 返回一个数组，数组中包含所有相交的物体的点的相关信息
+
+    // {
+    //   distance: 相机相机与物体的距离
+    //   face: 相交的物体的哪一面
+    //   faceIndex: 相交的物体的哪一面的索引
+    //   distanceToRay: 相机相机与物体的距离
+    //   index: 相交的物体的索引
+    //   instanceId: 相交的物体的实例id
+    //   instanceMatrix: 相交的物体的实例矩阵
+    //   instanceColor: 相交的物体的实例颜色
+    //  object: 相交的物体    ---   例如点击后修改颜色 可以修改这里面的材质 中的颜色
+    // }
+
+   if (intersects.length > 0) {
+    intersects[0].object._isSelect = true;
+    intersects[0].object._originColor = intersects[0].object.material.color.getHex();
+    intersects[0].object.material.color.set(0xff0000);
+  }
+});
+
+```
+
+
+
+#### 补间动画
+
+补间(动画)(来自 in-between )是一个概念，允许你以平滑的方式更改对象的属性。你只需告诉它哪些属性要更改，当补间结束运行时它们应该具有哪些最终值，以及这需要多长时间，补间引擎将负责计算从起始点到结束点的值。
+
+
 
 
 
