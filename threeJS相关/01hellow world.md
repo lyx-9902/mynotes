@@ -893,11 +893,153 @@ window.addEventListener('click', (e) => {
 
 补间(动画)(来自 in-between )是一个概念，允许你以平滑的方式更改对象的属性。你只需告诉它哪些属性要更改，当补间结束运行时它们应该具有哪些最终值，以及这需要多长时间，补间引擎将负责计算从起始点到结束点的值。
 
+插件来源:  
+
+1.npm 或script标签引入  ； https://github.com/tweenjs/tween.js/blob/main/README_zh-CN.md
+
+2.当npm 使用threejs时，已包含在依赖中。
+
+缓动函数：官网    https://tweenjs.github.io/tween.js/examples/03_graphs.html
+
+核心代码看下： 动画段
+
+```
+<template>
+
+</template>
+<script setup>
+//引入所有核心方法
+import * as THREE from "three"
+import { OrbitControls } from "three/examples/jsm/controls/orbitControls.js";
+//导入tween 补间动画库
+import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
+// 导入GUI
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+const gui = new GUI();
+// 创建场景
+const scene = new THREE.Scene();
+// 创建相机
+const camera = new THREE.PerspectiveCamera(
+  45, //视角
+  window.innerWidth / window.innerHeight, //宽高比
+  0.1, //近平面
+  1000,//原平面
+);
+
+//创建渲染器
+const renderer = new THREE.WebGLRenderer();
+//要渲染的宽高尺寸
+renderer.setSize(window.innerWidth, window.innerHeight);
+//将画布 挂载到dom中
+document.body.appendChild(renderer.domElement);
+
+console.log(TWEEN);
+// 创建一个立方体
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+//将网格添加到场景中
+
+//设置相机的位置
+camera.position.z = 10;   //  x y z轴的距离  默认是0
+camera.position.y = 3;
+camera.position.x = 3;
+camera.lookAt(5, 0, 0); // 默认看向原点
+
+// 添加世界坐标辅助器
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
+//添加轨道控制器
+const controls = new OrbitControls(camera, renderer.domElement);
+
+// renderer.render(scene, camera);
+function animate() {
+  controls.update();// 更新轨道控制器
+  requestAnimationFrame(animate);// 关键帧调用  循环调用
+  // cube.rotation.x += 0.01;
+  // cube.rotation.y += 0.01;
+  renderer.render(scene, camera);
+  TWEEN.update(); //每一帧需要调用更新
+}
+animate();
+
+// 设置响应画布
+window.addEventListener('resize', () => {
+  //更新摄像头的宽高比
+  camera.aspect = window.innerWidth / window.innerHeight;
+  //更新摄像机的投影矩阵
+  camera.updateProjectionMatrix();
+  //更新渲染器
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  //更新渲染器的像素比
+  renderer.setPixelRatio(window.devicePixelRatio);
+});
+
+
+// 动画    动画段
+const tween = new TWEEN.Tween(cube.position);
+// tween.to({ x: 4 }, 1000); // 设置目标位置和持续时间（毫秒）
+tween.to({ x: 4 }, 1000);
+tween.easing(TWEEN.Easing.Quartic.InOut); // 设置缓动函数-其他类型参看官网
+tween.repeat(6);//重复2次
+// tween.yoyo(true);//测试无效 -往复运动
+// tween.repeat(Infinity);//重复无限次
+
+// 延迟3s
+// tween.delay(3000);
+
+
+// 设置两个动画
+// let tween2 = new TWEEN.Tween(cube.position);
+// tween2.to({ x: -4 }, 1000);
+
+// tween.chain(tween2);  动画链
+// tween2.chain(tween);
+
+
+// 启动动画
+tween.start();
+
+// 回调都有那些
+tween.onStart(() => {
+  console.log('动画开始');
+});
+tween.onUpdate(() => {
+  console.log('动画更新');
+});
+tween.onStop(() => {
+  console.log('动画停止');
+});
+tween.onRepeat(() => {
+  console.log('动画重复');
+});
+tween.onComplete(() => {
+  console.log('结束');
+});
+
+
+let params = {
+  stop:function(){
+    tween.stop();
+  },
+}
+gui.add(params,'stop').name('停止动画');
+</script>
+```
 
 
 
 
 
+#### threejs中的UV
 
-
+在3D计算机图形学中，UV映射是一种将2D纹理映射到3D模型表面的方法。在这里，“”和“V”代表了2D纹理空间的坐标，这与2D笛卡尔坐标系统中的“X”和“Y”是类似的。在3D模型的每个顶点上，都会有一组对应的UV坐标，它们定义了3D模型在这个顶点上的表面应当对应纹理图像的哪个部分。
+UV坐标通常被储存在模型的顶点属性中，并与其他属性(如顶点位置、法线向量等)一起被传递到渲染管线中。
+在渲染过程中，像素着色器会使用这些UV坐标来从纹理中采样颜色，然后用这些颜色来着色模型的表面。
+UV坐标的取值范围通常是[0,1]，其中(0,0)对应纹理的左下角，(1,1)对应纹理的右上角。然而，也可以使用超出这个范围的值，这通常会导致纹理的重复或镜像，具体的效果取决于纹理的环绕模式(wrap mode)。
+UV映射的主要挑战之一是如何有效地将2D纹理映射到复杂的3D形状上，以避免拉伸、压缩或其他形式的失真。
+这通常需要专门的UV展开或UV拆分工具，以及一些手动的调整工作。
+总的来说，UV属性在3D场景中是非常重要的，它们定义了如何将纹理映射到3D模型的表面，从而极大地影响了模型的最终视觉效果
 
