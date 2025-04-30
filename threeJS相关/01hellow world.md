@@ -1043,3 +1043,238 @@ UV映射的主要挑战之一是如何有效地将2D纹理映射到复杂的3D�
 这通常需要专门的UV展开或UV拆分工具，以及一些手动的调整工作。
 总的来说，UV属性在3D场景中是非常重要的，它们定义了如何将纹理映射到3D模型的表面，从而极大地影响了模型的最终视觉效果
 
+
+
+![](.\img\7.png)
+
+
+
+在 Three.js 里，UV 映射的重要作用是把 2D 纹理图像精准地贴合到 3D 模型的表面。这里的 UV 坐标其实就是 2D 纹理坐标系，其中 U 代表水平方向，V 代表垂直方向，坐标范围是从 0 到 1。下面为你介绍 UV 映射的关键作用以及相关经典案例：
+
+
+
+主要作用
+
+1. **纹理映射**：能让纹理图像正确地在模型表面展开。
+2. **纹理重复**：通过设置大于 1 的 UV 坐标，可使纹理重复显示。
+3. **纹理动画**：借助修改 UV 坐标，能够实现纹理滚动或者帧动画效果。
+4. **光照计算**：在进行法线贴图和光照计算时，需要用到 UV 坐标。
+
+
+
+uv运用于材质函数里
+
+
+
+#### 11-法向量属性应用与法向量辅助器
+
+在 Three.js 中，法向量（Normal Vector）是一个垂直于几何体表面的向量，在光照计算、阴影投射、反射效果等方面起着至关重要的作用。
+
+```
+// 创建一个球体，使用需要法向量计算光照的材质
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+const material = new THREE.MeshPhongMaterial({ 
+  color: 0x00ff00,
+  shininess: 100
+});
+const mesh = new THREE.Mesh(geometry, material);
+
+// 添加光源
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
+```
+
+![](.\img\8.png)
+
+
+
+
+
+  模型表面，会出现密密麻麻的垂直表面的针形线。
+
+```
+//引入顶点法向量辅助器
+import { VertexNormalsHelper } from "three/examples/jsm/helpers/VertexNormalsHelper.js"; <----关键点
+
+
+// 创建一个球体，使用需要法向量计算光照的材质
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+const material = new THREE.MeshPhongMaterial({ 
+  color: 0x00ff00,
+  shininess: 100
+});
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+// 添加光源
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
+//将网格添加到场景中
+
+// 创建法向量辅助器                   <----关键点     看那个cube 就传入哪个
+const normalsHelper = new VertexNormalsHelper(cube, 0.2, 0x00ff00); // 第二个参数是箭头的长度
+scene.add(normalsHelper);
+
+```
+
+
+
+#### 12-几何体顶点转化 顶点位移 _旋转_缩放
+
+ 当物体顶点本身就偏离原点 ，需要移动回来，就使用顶点移动。 
+
+否则：就使用物体的旋转变形。
+
+
+
+几何体的旋转缩放
+
+http://www.webgl3d.cn/pages/1b0d6c/#%E6%97%8B%E8%BD%AC-rotatex-%E3%80%81-rotatey-%E3%80%81-rotatez
+
+旋转`.rotateX()`、`.rotateY()`、`.rotateZ()`  移动 translate（4，0，0）
+
+ 以上为 移动顶点，不等于移动物体。
+
+
+
+位置的移动
+
+```
+// 创建标准几何体
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+
+// 通过修改position属性移动整个模型
+mesh.position.x = 2;    // 沿X轴移动2个单位
+mesh.position.y = 1;    // 沿Y轴移动1个单位
+mesh.position.set(0, 0, 5); // 直接设置三维坐标
+
+// 动画循环中移动（每帧移动0.01单位）
+function animate() {
+  requestAnimationFrame(animate);
+  mesh.position.z -= 0.01; // 持续向Z轴负方向移动
+  renderer.render(scene, camera);
+}
+animate();
+```
+
+
+
+物体的移动 positon
+
+性能考量
+
+- **顶点移动**：每次修改顶点后需重新计算几何体数据（如索引、法向量），频繁操作会导致性能瓶颈
+- **位置移动**：仅更新对象的变换矩阵，性能开销极低，适合高频次调用
+
+总结
+
+- **顶点移动**是 "内容级" 修改，直接改变模型的几何形状
+- **位置移动**是 "容器级" 修改，改变模型在空间中的位置
+- 顶点移动适合需要改变模型外形的场景，而位置移动适合需要整体移动的场景
+- 在实际开发中，应优先使用位置移动，仅在必要时进行顶点操作以平衡性能和效果
+
+
+
+### 13-包围盒使用与世界矩阵转换
+
+   场景中加载的模型，自动都会有一个包围盒。 作用： 1.用户点击后，高亮包围盒，表示选中。2. 模型碰撞中，著需要计算包围盒的顶点，而不需要设计模型。因为模型的点太多了。
+
+   对应的类
+
+- [BufferGeometry](https://www.three3d.cn/docs/api/zh/core/BufferGeometry.html)
+
+  .boundingBox : Box3                           包围盒
+
+当前 bufferGeometry 的外边界矩形。可以通过 .computeBoundingBox() 计算。默认值是 **null**。
+
+.boundingSphere : Sphere                     包围球
+
+当前 bufferGeometry 的外边界球形。可以通过 .computeBoundingSphere() 计算。默认值是 **null**。
+
+
+
+**加载机器狗**
+
+```
+// 加载 GLB 模型
+const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader); //告诉加载器使用 draco 解码器
+let model;
+loader.load('/models/gltf/robot4-min.glb', (gltf) => {
+  model = gltf.scene;
+  // model.position.set(0, 0, 0.1); // 将中心点设置为 (1, 2, 3)
+  let duckMesh = gltf.scene.getObjectByName('go2_description');//根据名字获取模型
+  //获取模型的包围盒
+  let box = new THREE.Box3().setFromObject(duckMesh);
+  // 显示模型的包围盒
+  let helper = new THREE.Box3Helper(box, 0xffff00);
+  scene.add(helper);
+  console.log(box);
+  scene.add(model);
+});
+```
+
+
+
+![](.\img\9.png)
+
+当包围盒非常大，模型显示很小时， 是因为父级进行了缩放。 进行如下操作： 包围盒使用与世界矩阵转换
+
+### 14 几何体居中与获取几何体中心
+
+
+
+### 15 获取多个物体包围盒
+
+ 场景中，有三个小球， 获取一个包围盒，包含三个球。 思路是，小球两两合并。
+
+  核心方法： box.union(box3)
+
+```
+  //获取模型的包围盒
+  var box = new  THREE.Box3();
+             循环如下：
+  let box3 = new THREE.Box3().setFromObject(duckMesh);
+  box.union(box3);
+  
+  console.log(box);
+```
+
+### 16 边缘几何体与线框几何体
+
+  加载城市模型后， 根据每个模型，可以创建出来边缘几何体，或是线框面结合体，复制出来后，加载到场景中。
+
+  如下效果：
+
+![](.\img\10.png)
+
+
+
+
+
+### 17 灯光与阴影的关系与设置
+
+   threejs中，有一部分核心方法，就是   **灯光/阴影**   
+
+
+
+ 物体中，引入光源，就必然有阴影。 但是，例如基础网格材质MeshBasicMaterial，这种材质不受光照的影响。 
+
+```
+// 目标:灯光与阴影
+// 灯光阴影
+//1、材质要满足能够对光照有反应
+//2、设置渲染器开启阴影的计算 renderer.shadowMap.enabled= true;
+//3、设置光照投射阴影 directionalLight.castshadow= true;
+//4、设置物体投射阴影 sphere.castshadow = true;
+//5、设置物体接收阴影 plane.receiveshadow= true;
+```
+
+  满足以上条件，才能展现光影效果。
+
+### 18 平行关阴影属性与阴影相机原理
+
+只计算 阴影相机的近端 看向远端的， 矩形通道。
