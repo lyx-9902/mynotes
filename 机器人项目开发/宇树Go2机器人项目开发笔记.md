@@ -40,6 +40,26 @@ https://support.unitree.com/home/zh/developer/Motion%20Application
 
 ![](https://doc-cdn.unitree.com/static/2023/9/5/46cc9394c1dc45e4b41d6c9f9de8aeae_8000x4500.jpg)
 
+### threejs坐标和机器狗坐标对比
+
+
+
+
+
+![](.\img\2.png)
+
+  模型的朝向问题： 
+
+​    threejs中， 弧度0，朝向负Z轴，  dog.rotation.y
+
+​      机器狗中，弧度0，朝向x轴。
+
+
+
+
+
+
+
  机器人状态
 
 ![](https://doc-cdn.unitree.com/static/2023/9/5/412a498fced04f41b20cfbccd55e575f_8000x4500.jpg)
