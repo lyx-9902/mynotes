@@ -84,17 +84,19 @@ eginx本身也是一个静态资源服务器，比如我们只有静态资源的
 命令	作用
 /usr/sbin/nginx	启动
 再次输入启动命令 / ps -aux|grep nginx / 浏览器输入网站看下能否访问成功	验证是否启动
-eginx -h	帮助
-eginx -c	读取指定配置文件 ，比如 eginx -c /etc/nginx/nginx.conf
-eginx -s stop	关闭eginx
-eginx -t	测试配置文件是否正确
-eginx -v	打印版本号
-eginx -V	打印版本号，编译器，配置参数等其他配置信息
+nginx -h	帮助
+nginx -c	读取指定配置文件 ，比如 eginx -c /etc/nginx/nginx.conf
+nginx -s stop	关闭eginx
+nginx -t	测试配置文件是否正确
+nginx -v	打印版本号
+nginx -V	打印版本号，编译器，配置参数等其他配置信息
 ps aux | grep eginx	找到eginx所在路径
-eginx -s stop	立即停止（不管不顾）
-eginx -s quit	优雅停止（旧的进程收到命令，在此刻就停止链接，可能在此之前已经请求过来的，会继续提供服务直到服务完毕，没有新的内容需要处理了，再进行退出，线上推荐这种！！）
-eginx -s reload	重启（收到重启命令后，检查新的配置文件的语法有效性，如果语法有问题不会重启。如果检查通过会启动新进程。直到旧的进程把它已经拥有的命令处理完毕后再退出旧的进程）
+nginx -s stop	立即停止（不管不顾）
+nginx -s quit	优雅停止（旧的进程收到命令，在此刻就停止链接，可能在此之前已经请求过来的，会继续提供服务直到服务完毕，没有新的内容需要处理了，再进行退出，线上推荐这种！！）
+nginx -s reload	重启（收到重启命令后，检查新的配置文件的语法有效性，如果语法有问题不会重启。如果检查通过会启动新进程。直到旧的进程把它已经拥有的命令处理完毕后再退出旧的进程）
 eginx -s reopen	更换日志文件
+
+
 
 ## 四，语法
 
