@@ -72,3 +72,16 @@ background: url('image.jpg') no-repeat center / cover;
 
 
 
+flex 布局文本与数字不水平对齐问题?给父元素加一个行高?
+
+https://blog.csdn.net/qq_42859450/article/details/110230431
+
+```
+如下图：文本和数字不在同一水平线上，原因：数字的高小于文本的高，给父元素添加一个行高可解决
+父元素：.appt-box {
+display: flex;
+align-items: center;
+line-height: .3rem;//大小自己设置
+}
+```
+
