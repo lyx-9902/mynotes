@@ -55,7 +55,7 @@ logmode：指定日志记录的方式，例如"rolland"表示日志文件会滚�
 onfailure ：定义服务失败时采取的行动，如重新启动服务。
 
       ```
-
+    
       ```
 
 #### 3
@@ -84,7 +84,7 @@ cd F:\test-robot\nginx-1.24.0
 Running  WinSW-x64-Nginx... aaaaluyunxiaodenginxbackserve
 ```
 
-
+WinSW-x64NginxService.exe这个是我服务bat 起的名字。
 
 ```
  .\WinSW-x64NginxService.exe install 初始化服务
@@ -95,6 +95,7 @@ Running  WinSW-x64-Nginx... aaaaluyunxiaodenginxbackserve
   
   .\WinSW-x64NginxService.exe uninstall 卸载服务
  
+ .\WinSW-x64NginxService.exe status 查看当前服务的状态   Active (running)表示运行中
 ```
 
 ####  5. 操作完毕
