@@ -153,6 +153,43 @@ https://blog.csdn.net/liangmengbk/article/details/148103295
 
 
 
+## 2025.10.11日记
+
+自启动的改进版，
+
+1. 上边记录的是如下的执行逻辑。
+
+ winsw.exe + xml ==>  执行 start.bat + RunHiddenConsole.exe   ==》执行启动nginx.exe应用程序
+
+2.改进版逻辑
+
+ winsw.exe + xml ==>  执行启动nginx.exe应用程序
+
+xml的执行路径修改为 nginx.exe即可。 
+
+```xml
+<service>
+    <id>nginx</id>
+    <name>nginx</name>
+    <description>nginx server</description>
+    <logpath>%BASE%\logs</logpath>
+    <logmode>roll</logmode>
+    <depend></depend>
+    <arguments></arguments>
+    <startmode>Automatic</startmode>
+    <executable>%BASE%\nginx.exe</executable>   //executable  可执行的
+    <stopexecutable>%BASE%\nginx.exe -s stop</stopexecutable>
+</service>
+```
+
+
+
+
+
+
+
+
+
 
 
 
