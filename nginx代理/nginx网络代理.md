@@ -21,11 +21,46 @@
             }
 ```
 
+ 
+
+排查问题思路：
+
+1 当修改了config配置文件，先nginx -t 检查一下语法。  （能检查的一部分错误）
+
+2.启动服务，查看报错日志。  （会提示报错的  专有报错码）
+
+   下面是一个路径错误。  
+
+  location / {
+
+​      root  F:\testnginx\dist;                                          win下   左斜杠两个，右斜杠可以用一个。 
+
+​      index  index.html index.htm;
+
+​    }
+
+```
+2025/11/06 10:31:43 [crit] 21948#20588: *1 GetFileAttributesEx() "F:	estnginx\dist" failed (123: The filename, directory name, or volume label syntax is incorrect), client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "127.0.0.1"  分析日志
+```
+
+这条日志的核心问题是 **路径语法错误**，和你之前日志中反复出现的报错根源完全一致，具体分析和修复步骤如下：
+
+### 一、日志关键信息拆解
+
+| 字段                                       | 含义                                                         |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| `[crit]`                                   | 严重错误（路径语法完全无法识别，Nginx 无法执行文件查找操作） |
+| `GetFileAttributesEx() "F: estnginx\dist"` | Nginx 尝试获取路径属性，但路径被解析错误：`F:\testnginx\dist` 变成了 `F: estnginx\dist`（`\t` 被识别为制表符） |
+| `(123: 语法不正确)`                        | Windows 系统的路径语法错误码，直接原因是 **单个反斜杠 `\` 被解析为转义字符** |
+| `request: "GET / HTTP/1.1"`                | 访问根路径 `/` 时触发，说明 `nginx.conf` 中 `root` 配置的路径存在语法问题 |
 
 
 
+win下正确的配置
 
-
+```
+root  F:/testnginx/dist; 
+```
 
 
 
