@@ -1,5 +1,7 @@
 # docker使用记录
 
+境内 Docker 镜像状态监控 https://status.anye.xyz/
+
 ##  0.使用过程中，碰到的小问题
 
 dos 命令：  

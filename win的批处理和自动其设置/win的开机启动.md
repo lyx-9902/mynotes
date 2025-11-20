@@ -1,10 +1,10 @@
-# 项目自启动的实现
+# 前端项目自启动的实现
 
 项目背景： 
 
    vue项目，打包dis文件后，nginx部署前端项目， 需求： win笔记本，开启自启动。
 
-
+​    
 
 ##  实现方法1：
 
@@ -54,15 +54,11 @@ arguments：设置传递给可执行文件的参数。
 logmode：指定日志记录的方式，例如"rolland"表示日志文件会滚动。
 onfailure ：定义服务失败时采取的行动，如重新启动服务。
 
-      ```
-    
-      ```
-
-#### 3
+#### 3 文件路径放置
 
 将winSW.exe文件，和xml配置文件，放置到nginx的文件夹同一级目录。 原因：是，xml指令执行需要使用winsw辅助程序， 而start.bat执行脚本的执行代码中，需要依赖RunHiddenConsole.exe辅助程序。 保持同一个执行根节点。
 
-#### 4
+#### 4  启动服务
 
 管理员权限打开shell . 把自己的服务初始化进win系统中， 然后启动自己的服务。
 
@@ -74,7 +70,7 @@ cd F:\test-robot\nginx-1.24.0
 
 
 
-常用指令：
+### 常用指令：
 
 ```
  Get-Service -Name WinSW-x64-NginxService  获取自己的服务的状态信息 ，是否保活中，还是停止了  
@@ -99,8 +95,6 @@ WinSW-x64NginxService.exe这个是我服务bat 起的名字。
 ```
 
 ####  5. 操作完毕
-
-
 
  本案例碰到的问题：
 
@@ -135,21 +129,11 @@ timeout /t -1 >nul    新增部分
 这样修改后，当服务通过 WinSW 启动时，批处理脚本不会自动退出，从而保持 Nginx 进程运行。
 ```
 
-
-
-
-
 ## 拓展：
 
 WinSW将执行文件服务化 
 
 https://blog.csdn.net/liangmengbk/article/details/148103295
-
-
-
-
-
-
 
 
 
