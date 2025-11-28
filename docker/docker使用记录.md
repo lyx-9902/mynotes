@@ -611,3 +611,61 @@ curl https://www.baidu.com
 
 
 
+
+
+## 实际操作中容易出错的地方
+
+docker  docker compose 使用过程中，镜像问题配置有两个问题
+
+  一个是
+
+#### 步骤 1：编辑 Docker 配置文件
+
+创建 / 修改 Docker 的配置文件（`/etc/docker/daemon.json`）：
+
+```bash
+sudo nano /etc/docker/daemon.json
+```
+
+  写入：   内镜像地址
+
+```
+{
+ "registry-mirrors": [ 
+ 	"https://docker.xianyuai.xyz",
+ 	"https://docker.m.daocloud.io", 
+ 	"https://mirror.ccs.tencentyun.com", 
+ 	"https://dockerproxy.net" 
+ 	]
+}
+```
+
+#### 步骤 3：重启 Docker 服务
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+#### 步骤 4：重新执行 `docker compose up -d`
+
+```bash
+docker compose up -d
+```
+
+   修改镜像后，需要重新加载一下。
+
+
+
+还有一个地方：这个是apt使用的镜像
+
+etc/apt/sources.list    修改为如下镜像
+
+```
+# 阿里云 Ubuntu 24.04 LTS 镜像源
+deb http://mirrors.aliyun.com/ubuntu/ noble main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ noble-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ noble-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ noble-backports main restricted universe multiverse
+```
+
