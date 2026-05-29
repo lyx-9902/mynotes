@@ -89,6 +89,6 @@ const addMessage = (text, isSent) => {
 
 
 
-项目案例可参考：
+项目案例可参考：   2026.05.29 连接失效了
 
 https://gitee.com/yatlatic/51-world-demo/tree/master    
